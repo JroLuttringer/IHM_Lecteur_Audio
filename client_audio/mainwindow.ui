@@ -189,6 +189,18 @@ p, li { white-space: pre-wrap; }
           <height>23</height>
          </rect>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>2</number>
+        </property>
+        <property name="smallDecimalPoint">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QSlider" name="horizontalSlider_song">
         <property name="geometry">

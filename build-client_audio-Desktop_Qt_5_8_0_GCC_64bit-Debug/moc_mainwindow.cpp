@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../serveur_audio/mainwindow.h"
+#include "../client_audio/mainwindow.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[1];
-    char stringdata0[11];
+    QByteArrayData data[11];
+    char stringdata0[97];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -31,10 +31,22 @@ struct qt_meta_stringdata_MainWindow_t {
     )
 static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
     {
-QT_MOC_LITERAL(0, 0, 10) // "MainWindow"
+QT_MOC_LITERAL(0, 0, 10), // "MainWindow"
+QT_MOC_LITERAL(1, 11, 7), // "sl_play"
+QT_MOC_LITERAL(2, 19, 0), // ""
+QT_MOC_LITERAL(3, 20, 8), // "sl_pause"
+QT_MOC_LITERAL(4, 29, 7), // "sl_stop"
+QT_MOC_LITERAL(5, 37, 7), // "sl_next"
+QT_MOC_LITERAL(6, 45, 7), // "sl_back"
+QT_MOC_LITERAL(7, 53, 7), // "sl_mute"
+QT_MOC_LITERAL(8, 61, 11), // "sl_lang_fra"
+QT_MOC_LITERAL(9, 73, 11), // "sl_lang_eng"
+QT_MOC_LITERAL(10, 85, 11) // "sl_lang_ger"
 
     },
-    "MainWindow"
+    "MainWindow\0sl_play\0\0sl_pause\0sl_stop\0"
+    "sl_next\0sl_back\0sl_mute\0sl_lang_fra\0"
+    "sl_lang_eng\0sl_lang_ger"
 };
 #undef QT_MOC_LITERAL
 
@@ -44,21 +56,56 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: name, argc, parameters, tag, flags
+       1,    0,   59,    2, 0x0a /* Public */,
+       3,    0,   60,    2, 0x0a /* Public */,
+       4,    0,   61,    2, 0x0a /* Public */,
+       5,    0,   62,    2, 0x0a /* Public */,
+       6,    0,   63,    2, 0x0a /* Public */,
+       7,    0,   64,    2, 0x0a /* Public */,
+       8,    0,   65,    2, 0x0a /* Public */,
+       9,    0,   66,    2, 0x0a /* Public */,
+      10,    0,   67,    2, 0x0a /* Public */,
+
+ // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+
        0        // eod
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    Q_UNUSED(_o);
-    Q_UNUSED(_id);
-    Q_UNUSED(_c);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        MainWindow *_t = static_cast<MainWindow *>(_o);
+        Q_UNUSED(_t)
+        switch (_id) {
+        case 0: _t->sl_play(); break;
+        case 1: _t->sl_pause(); break;
+        case 2: _t->sl_stop(); break;
+        case 3: _t->sl_next(); break;
+        case 4: _t->sl_back(); break;
+        case 5: _t->sl_mute(); break;
+        case 6: _t->sl_lang_fra(); break;
+        case 7: _t->sl_lang_eng(); break;
+        case 8: _t->sl_lang_ger(); break;
+        default: ;
+        }
+    }
     Q_UNUSED(_a);
 }
 
@@ -86,6 +133,15 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QMainWindow::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 9)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 9;
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 9)
+            *reinterpret_cast<int*>(_a[0]) = -1;
+        _id -= 9;
+    }
     return _id;
 }
 QT_WARNING_POP
