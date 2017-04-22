@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-04-17T18:19:04
+# Project created by QtCreator 2017-04-20T18:02:18
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = client_audio
+TARGET = serveur
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -25,13 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    client.cpp
+    server.cpp \
+    automate.cpp
 
 HEADERS  += mainwindow.h \
-    client.h
+    server.h \
+    automate.h
 
 FORMS    += mainwindow.ui
-
-RESOURCES += \
-    resources.qrc
 

@@ -1,7 +1,16 @@
+/*
+ * Copyright Cyrille MULLER Jean-Romain LUTTRINGER
+ * UFR de Mathématiques et d'Informatique
+ * Université de Strasbourg
+ * © 2017
+ */
+
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "client.h"
 
 namespace Ui {
 class MainWindow;
@@ -12,6 +21,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    client *c_test;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
@@ -19,8 +29,7 @@ private:
     Ui::MainWindow *ui;
 
 public slots:
-    void sl_play();
-    void sl_pause();
+    void closeEvent();
     void sl_stop();
     void sl_next();
     void sl_back();

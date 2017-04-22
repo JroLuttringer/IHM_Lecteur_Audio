@@ -1,23 +1,33 @@
-#include "mainwindow.h"
+/*
+ * Copyright Cyrille MULLER Jean-Romain LUTTRINGER
+ * UFR de Mathématiques et d'Informatique
+ * Université de Strasbourg
+ * © 2017
+ */
+
 #include "ui_mainwindow.h"
+#include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    this->c_test = new(client);
     ui->setupUi(this);
 
     //Create socket
     //Connect to server
     //Receive info from server
 
-    //Machine à état?? (copy)
 
     //Connect buttons
     //play
-    connect(ui->pushButton_play, SIGNAL(pressed()), this, SLOT(sl_play()));
+    connect(ui->pushButton_play, SIGNAL(pressed()), this->c_test, SLOT(sl_play()));
     //pause
-    connect(ui->pushButton_pause, SIGNAL(pressed()), this, SLOT(sl_pause()));
+    connect(ui->pushButton_pause, SIGNAL(pressed()), this->c_test, SLOT(sl_pause()));
+
+
+
     //stop
     connect(ui->pushButton_stop, SIGNAL(pressed()), this, SLOT(sl_stop()));
     //next
@@ -40,16 +50,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_french, SIGNAL(pressed()), this, SLOT(sl_lang_fra()));
     connect(ui->pushButton_english, SIGNAL(pressed()), this, SLOT(sl_lang_eng()));
     connect(ui->pushButton_german, SIGNAL(pressed()), this, SLOT(sl_lang_ger()));
+
 }
 
-void MainWindow::sl_play()
-{
-    //send socket play
-}
-void MainWindow::sl_pause()
-{
-    //send socket pause
-}
+
 void MainWindow::sl_stop()
 {
     //send socket stop
@@ -79,7 +83,14 @@ void MainWindow::sl_lang_eng()
     //send socket eng
 }
 
+void MainWindow::closeEvent()
+{
+    delete this->c_test;
+    delete ui;
+}
+
 MainWindow::~MainWindow()
 {
+    delete this->c_test;
     delete ui;
 }

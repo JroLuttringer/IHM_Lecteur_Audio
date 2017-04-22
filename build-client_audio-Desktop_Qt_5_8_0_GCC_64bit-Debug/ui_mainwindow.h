@@ -158,6 +158,10 @@ public:
         lcdNumber_time = new QLCDNumber(frame_song);
         lcdNumber_time->setObjectName(QStringLiteral("lcdNumber_time"));
         lcdNumber_time->setGeometry(QRect(40, 40, 64, 23));
+        lcdNumber_time->setFrameShape(QFrame::Box);
+        lcdNumber_time->setFrameShadow(QFrame::Plain);
+        lcdNumber_time->setLineWidth(2);
+        lcdNumber_time->setSmallDecimalPoint(true);
         horizontalSlider_song = new QSlider(frame_song);
         horizontalSlider_song->setObjectName(QStringLiteral("horizontalSlider_song"));
         horizontalSlider_song->setGeometry(QRect(20, 10, 451, 31));
