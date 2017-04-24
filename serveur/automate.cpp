@@ -2,6 +2,8 @@
 
 automate::automate(QObject *parent) : QObject(parent)
 {
+    muted = false;
+    volume = 50;
     //Timer representant la chanson en lecture
     songTimer =new QTimer(this);
     songTimer->setSingleShot(true);
@@ -72,9 +74,22 @@ void automate::message(signalType sig, QVariantMap params) {
   case kSignalPause:
       setPause();
       break;
+  case kSignalVolume:
+      int vol;
+      vol = params["volume"].toLongLong();
+      setVolume(vol);
+      break;
+  case kSignalInfo:
+        send_info();
+      break;
   default:
       break;
   }
+}
+
+void automate::send_info(){
+    QVariantMap params;
+    emit signalMachine(kSignalInfo, params);
 }
 
 void automate::setPause(){
@@ -83,4 +98,12 @@ void automate::setPause(){
 
 void automate::setPlay(){
   emit signalPlay();
+}
+
+void automate::setVolume(int vol)
+{
+    volume = vol;
+    QVariantMap params;
+    params.insert("volume", vol);
+    emit signalMachine(kSignalVolume, params);
 }

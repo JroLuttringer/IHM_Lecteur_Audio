@@ -12,7 +12,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+    client c;
     w.show();
 
+    QObject::connect(&w, SIGNAL(signalToClient(signalType,QVariantMap)), &c, SLOT(messageFromUI(signalType, QVariantMap)));
+    QObject::connect(&c, SIGNAL(signalFromClient(signalType,QVariantMap)), &w, SLOT(messageFromClient(signalType,QVariantMap)));
     return a.exec();
 }

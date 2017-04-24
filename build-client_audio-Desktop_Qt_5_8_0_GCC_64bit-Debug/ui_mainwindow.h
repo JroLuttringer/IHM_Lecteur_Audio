@@ -19,6 +19,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -27,7 +28,6 @@
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -51,7 +51,7 @@ public:
     QPushButton *pushButton_english;
     QPushButton *pushButton_german;
     QFrame *frame_info;
-    QTextEdit *textEdit_info;
+    QLineEdit *lineEdit;
     QFrame *frame_song;
     QLCDNumber *lcdNumber_time;
     QSlider *horizontalSlider_song;
@@ -143,9 +143,10 @@ public:
         frame_info->setMinimumSize(QSize(0, 200));
         frame_info->setFrameShape(QFrame::StyledPanel);
         frame_info->setFrameShadow(QFrame::Raised);
-        textEdit_info = new QTextEdit(frame_info);
-        textEdit_info->setObjectName(QStringLiteral("textEdit_info"));
-        textEdit_info->setGeometry(QRect(30, 20, 441, 151));
+        lineEdit = new QLineEdit(frame_info);
+        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        lineEdit->setGeometry(QRect(22, 14, 451, 171));
+        lineEdit->setReadOnly(true);
 
         verticalLayout_2->addWidget(frame_info);
 
@@ -300,13 +301,7 @@ public:
         pushButton_french->setText(QApplication::translate("MainWindow", "FRA", Q_NULLPTR));
         pushButton_english->setText(QApplication::translate("MainWindow", "ENG", Q_NULLPTR));
         pushButton_german->setText(QApplication::translate("MainWindow", "GER", Q_NULLPTR));
-        textEdit_info->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:28pt;\">Titre - Artiste - Album</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:28pt;\">--------------------------------</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:28pt;\">M\303\251tadata</span></p></body></html>", Q_NULLPTR));
+        lineEdit->setText(QString());
         pushButton_mute->setText(QString());
         pushButton_back->setText(QString());
         pushButton_pause->setText(QString());

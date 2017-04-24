@@ -4,10 +4,16 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+
+
     MainWindow w;
+    QThread::usleep(1000);
     server s;
     automate m;
     w.show();
+
+
 
     QObject::connect(&w, SIGNAL(signal_on()), &s, SLOT(ui_on()));
     QObject::connect(&m, SIGNAL(signalMachine(signalType, QVariantMap)), &s, SLOT(message(signalType, QVariantMap)));

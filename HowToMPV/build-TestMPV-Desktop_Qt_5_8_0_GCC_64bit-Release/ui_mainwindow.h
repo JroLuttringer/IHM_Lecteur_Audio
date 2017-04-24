@@ -29,6 +29,7 @@ public:
     QWidget *centralWidget;
     QPushButton *Pause;
     QPushButton *Play;
+    QPushButton *name;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -46,6 +47,9 @@ public:
         Play = new QPushButton(centralWidget);
         Play->setObjectName(QStringLiteral("Play"));
         Play->setGeometry(QRect(220, 110, 89, 25));
+        name = new QPushButton(centralWidget);
+        name->setObjectName(QStringLiteral("name"));
+        name->setGeometry(QRect(120, 160, 131, 25));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -68,6 +72,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
         Pause->setText(QApplication::translate("MainWindow", "Pause", Q_NULLPTR));
         Play->setText(QApplication::translate("MainWindow", "Play", Q_NULLPTR));
+        name->setText(QApplication::translate("MainWindow", "Get Song Name", Q_NULLPTR));
     } // retranslateUi
 
 };

@@ -13,10 +13,12 @@
 #include <QObject>
 #include <QLocalSocket>
 #include <QtConcurrent/QtConcurrent>
-enum class signalType
+enum signalType
 {
-    test,
-    test2
+    kSignalPlay,
+    kSignalPause,
+    kSignalVolume,
+    kSignalInfo
 };
 
 class client : public QObject
@@ -37,7 +39,10 @@ signals:
 public slots:
     void sl_play();
     void sl_pause();
-//    void messageFromUI(signalType, QVariantMap);
+    void sl_volume(int);
+    //initial message to ask for all info
+    void sl_info();
+    void messageFromUI(signalType, QVariantMap);
 };
 
 #endif // CLIENT_H

@@ -18,6 +18,7 @@ public:
     void clientMessageLoop();
     void MPV_messageLoop();
 private:
+    QString song_name;
     QLocalServer *m_server;
     QLocalSocket *m_client=NULL;
     QLocalSocket *m_mpv=NULL;
@@ -38,6 +39,7 @@ public slots:
 
     void pause_mpv();
     void play_mpv();
+    void setVolume_mpv(int);
 };
 
 #endif // SERVER_H

@@ -25,6 +25,7 @@ client::client(QObject *parent) : QObject(parent),
         qDebug()<<m_socket->errorString();
         m_socket->disconnectFromServer();
     }
+    sl_info();
 }
 
 
@@ -39,30 +40,104 @@ void client::serverMessageLoop()
             continue;
         }
         QString str=QString(in.device()->readLine());
-        qDebug() << qPrintable(str);
         if(str=="") continue; // Evitons les lignes vides.
+        qDebug() << qPrintable(str);
         QByteArray a=str.toUtf8();
         QJsonParseError error;
         QJsonDocument jDoc=QJsonDocument::fromJson(a, &error);
         QJsonObject jsonObject=jDoc.object();
+        if (jsonObject["signal"]== "info") emit signalFromClient(kSignalInfo, jsonObject.toVariantMap());
+        if (jsonObject["signal"]== "play") emit signalFromClient(kSignalPlay, jsonObject.toVariantMap());
+        if (jsonObject["signal"]== "pause") emit signalFromClient(kSignalPause, jsonObject.toVariantMap());
+    }
+}
+
+void client::sl_info()
+{
+    QJsonObject jsonObject;
+    jsonObject["signal"] ="get_info";
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
+    if (m_socket != NULL) {
+        m_socket->write(bytes.data(), bytes.length());
+        m_socket->flush();
     }
 }
 
 void client::sl_play()
 {
     //send socket play
+    QJsonObject jsonObject;
+//    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",false]
+//    request << "play_client";
+    jsonObject["signal"] ="play_client";
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
     if (m_socket != NULL) {
-        m_socket->write("play_client");
+        m_socket->write(bytes.data(), bytes.length());
         m_socket->flush();
     }
 }
 void client::sl_pause()
 {
     //send socket pause
+    QJsonObject jsonObject;
+//    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",false]
+//    request << "pause_client";
+    jsonObject["signal"] = "pause_client";
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
     if (m_socket != NULL) {
-        m_socket->write("pause_client");
+        m_socket->write(bytes.data(), bytes.length());
         m_socket->flush();
     }
+}
+
+void client::sl_volume(int vol)
+{
+    QJsonObject jsonObject;
+    jsonObject["volume"] = vol;
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
+    if (m_socket != NULL) {
+        m_socket->write(bytes.data(), bytes.length());
+        m_socket->flush();
+    }
+}
+
+void client::messageFromUI(signalType sig, QVariantMap params) {
+    qDebug("received message from UI");
+  switch(sig){
+  case kSignalPlay:
+        sl_play();
+      break;
+  case kSignalPause:
+        sl_pause();
+      break;
+  case kSignalVolume:
+        int vol;
+        vol= params["volume"].toLongLong();
+        sl_volume(vol);
+      break;
+   case kSignalInfo:
+      sl_info();
+      break;
+
+  default:
+      break;
+  }
 }
 
 

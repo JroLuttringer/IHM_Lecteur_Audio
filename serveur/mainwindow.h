@@ -14,11 +14,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    Ui::MainWindow *ui;
+    QProcess *myProcess;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
+    Ui::MainWindow *ui;
 //    server *s_test;
 signals:
     void signal_on();

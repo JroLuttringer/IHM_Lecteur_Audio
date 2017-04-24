@@ -15,7 +15,9 @@
 // ainsi que ceux qu'il va renvoyer vers le serveur(donc les clients)
 enum signalType {
     kSignalPlay,
-    kSignalPause
+    kSignalPause,
+    kSignalVolume,
+    kSignalInfo
 };
 
 class automate : public QObject
@@ -25,12 +27,14 @@ public:
     explicit automate(QObject *parent = 0);
 
 private:
+    QString *song_name;
     QTimer *songTimer;
-
     QStateMachine *machine;
-
     QState *play;
     QState *pause;
+
+    bool muted;
+    int volume;
 //    QState *stop;
 
     //Sous état? car independant des autres
@@ -55,7 +59,9 @@ private slots:
     //messages internes, fonctions à appeler lors de reception de messages du serveur par ex.
     //complementaire des fonctions private
     void setPlay();
+    void send_info();
     void setPause();
+    void setVolume(int);
 //    void setStop();
 //    void setMute();
 

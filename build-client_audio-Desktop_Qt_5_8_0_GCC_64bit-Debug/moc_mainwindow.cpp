@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[10];
-    char stringdata0[91];
+    QByteArrayData data[17];
+    char stringdata0[179];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,20 +32,29 @@ struct qt_meta_stringdata_MainWindow_t {
 static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
     {
 QT_MOC_LITERAL(0, 0, 10), // "MainWindow"
-QT_MOC_LITERAL(1, 11, 10), // "closeEvent"
-QT_MOC_LITERAL(2, 22, 0), // ""
-QT_MOC_LITERAL(3, 23, 7), // "sl_stop"
-QT_MOC_LITERAL(4, 31, 7), // "sl_next"
-QT_MOC_LITERAL(5, 39, 7), // "sl_back"
-QT_MOC_LITERAL(6, 47, 7), // "sl_mute"
-QT_MOC_LITERAL(7, 55, 11), // "sl_lang_fra"
-QT_MOC_LITERAL(8, 67, 11), // "sl_lang_eng"
-QT_MOC_LITERAL(9, 79, 11) // "sl_lang_ger"
+QT_MOC_LITERAL(1, 11, 14), // "signalToClient"
+QT_MOC_LITERAL(2, 26, 0), // ""
+QT_MOC_LITERAL(3, 27, 10), // "signalType"
+QT_MOC_LITERAL(4, 38, 10), // "closeEvent"
+QT_MOC_LITERAL(5, 49, 7), // "sl_play"
+QT_MOC_LITERAL(6, 57, 8), // "sl_pause"
+QT_MOC_LITERAL(7, 66, 9), // "sl_volume"
+QT_MOC_LITERAL(8, 76, 16), // "setDisplay_timer"
+QT_MOC_LITERAL(9, 93, 7), // "sl_stop"
+QT_MOC_LITERAL(10, 101, 7), // "sl_next"
+QT_MOC_LITERAL(11, 109, 7), // "sl_back"
+QT_MOC_LITERAL(12, 117, 7), // "sl_mute"
+QT_MOC_LITERAL(13, 125, 11), // "sl_lang_fra"
+QT_MOC_LITERAL(14, 137, 11), // "sl_lang_eng"
+QT_MOC_LITERAL(15, 149, 11), // "sl_lang_ger"
+QT_MOC_LITERAL(16, 161, 17) // "messageFromClient"
 
     },
-    "MainWindow\0closeEvent\0\0sl_stop\0sl_next\0"
+    "MainWindow\0signalToClient\0\0signalType\0"
+    "closeEvent\0sl_play\0sl_pause\0sl_volume\0"
+    "setDisplay_timer\0sl_stop\0sl_next\0"
     "sl_back\0sl_mute\0sl_lang_fra\0sl_lang_eng\0"
-    "sl_lang_ger"
+    "sl_lang_ger\0messageFromClient"
 };
 #undef QT_MOC_LITERAL
 
@@ -55,32 +64,48 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       0,       // signalCount
+       1,       // signalCount
+
+ // signals: name, argc, parameters, tag, flags
+       1,    2,   84,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   54,    2, 0x0a /* Public */,
-       3,    0,   55,    2, 0x0a /* Public */,
-       4,    0,   56,    2, 0x0a /* Public */,
-       5,    0,   57,    2, 0x0a /* Public */,
-       6,    0,   58,    2, 0x0a /* Public */,
-       7,    0,   59,    2, 0x0a /* Public */,
-       8,    0,   60,    2, 0x0a /* Public */,
-       9,    0,   61,    2, 0x0a /* Public */,
+       4,    0,   89,    2, 0x0a /* Public */,
+       5,    0,   90,    2, 0x0a /* Public */,
+       6,    0,   91,    2, 0x0a /* Public */,
+       7,    1,   92,    2, 0x0a /* Public */,
+       8,    0,   95,    2, 0x0a /* Public */,
+       9,    0,   96,    2, 0x0a /* Public */,
+      10,    0,   97,    2, 0x0a /* Public */,
+      11,    0,   98,    2, 0x0a /* Public */,
+      12,    0,   99,    2, 0x0a /* Public */,
+      13,    0,  100,    2, 0x0a /* Public */,
+      14,    0,  101,    2, 0x0a /* Public */,
+      15,    0,  102,    2, 0x0a /* Public */,
+      16,    2,  103,    2, 0x0a /* Public */,
+
+ // signals: parameters
+    QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    2,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
 
        0        // eod
 };
@@ -91,18 +116,33 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         MainWindow *_t = static_cast<MainWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->closeEvent(); break;
-        case 1: _t->sl_stop(); break;
-        case 2: _t->sl_next(); break;
-        case 3: _t->sl_back(); break;
-        case 4: _t->sl_mute(); break;
-        case 5: _t->sl_lang_fra(); break;
-        case 6: _t->sl_lang_eng(); break;
-        case 7: _t->sl_lang_ger(); break;
+        case 0: _t->signalToClient((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
+        case 1: _t->closeEvent(); break;
+        case 2: _t->sl_play(); break;
+        case 3: _t->sl_pause(); break;
+        case 4: _t->sl_volume((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: _t->setDisplay_timer(); break;
+        case 6: _t->sl_stop(); break;
+        case 7: _t->sl_next(); break;
+        case 8: _t->sl_back(); break;
+        case 9: _t->sl_mute(); break;
+        case 10: _t->sl_lang_fra(); break;
+        case 11: _t->sl_lang_eng(); break;
+        case 12: _t->sl_lang_ger(); break;
+        case 13: _t->messageFromClient((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
         default: ;
         }
+    } else if (_c == QMetaObject::IndexOfMethod) {
+        int *result = reinterpret_cast<int *>(_a[0]);
+        void **func = reinterpret_cast<void **>(_a[1]);
+        {
+            typedef void (MainWindow::*_t)(signalType , QVariantMap );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&MainWindow::signalToClient)) {
+                *result = 0;
+                return;
+            }
+        }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -130,15 +170,22 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 14;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 14)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 8;
+        _id -= 14;
     }
     return _id;
+}
+
+// SIGNAL 0
+void MainWindow::signalToClient(signalType _t1, QVariantMap _t2)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE
