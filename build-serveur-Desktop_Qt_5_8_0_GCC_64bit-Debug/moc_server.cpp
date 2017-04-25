@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_server_t {
-    QByteArrayData data[11];
-    char stringdata0[123];
+    QByteArrayData data[17];
+    char stringdata0[196];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,17 +37,25 @@ QT_MOC_LITERAL(2, 24, 0), // ""
 QT_MOC_LITERAL(3, 25, 10), // "signalType"
 QT_MOC_LITERAL(4, 36, 7), // "message"
 QT_MOC_LITERAL(5, 44, 5), // "ui_on"
-QT_MOC_LITERAL(6, 50, 20), // "connectionFromClient"
-QT_MOC_LITERAL(7, 71, 18), // "clientDisconnected"
-QT_MOC_LITERAL(8, 90, 9), // "pause_mpv"
-QT_MOC_LITERAL(9, 100, 8), // "play_mpv"
-QT_MOC_LITERAL(10, 109, 13) // "setVolume_mpv"
+QT_MOC_LITERAL(6, 50, 12), // "send_startup"
+QT_MOC_LITERAL(7, 63, 20), // "connectionFromClient"
+QT_MOC_LITERAL(8, 84, 18), // "clientDisconnected"
+QT_MOC_LITERAL(9, 103, 12), // "set_time_mpv"
+QT_MOC_LITERAL(10, 116, 9), // "pause_mpv"
+QT_MOC_LITERAL(11, 126, 8), // "play_mpv"
+QT_MOC_LITERAL(12, 135, 13), // "get_file_name"
+QT_MOC_LITERAL(13, 149, 12), // "get_duration"
+QT_MOC_LITERAL(14, 162, 10), // "get_volume"
+QT_MOC_LITERAL(15, 173, 8), // "get_time"
+QT_MOC_LITERAL(16, 182, 13) // "setVolume_mpv"
 
     },
     "server\0signalFromServer\0\0signalType\0"
-    "message\0ui_on\0connectionFromClient\0"
-    "clientDisconnected\0pause_mpv\0play_mpv\0"
-    "setVolume_mpv"
+    "message\0ui_on\0send_startup\0"
+    "connectionFromClient\0clientDisconnected\0"
+    "set_time_mpv\0pause_mpv\0play_mpv\0"
+    "get_file_name\0get_duration\0get_volume\0"
+    "get_time\0setVolume_mpv"
 };
 #undef QT_MOC_LITERAL
 
@@ -57,7 +65,7 @@ static const uint qt_meta_data_server[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -65,22 +73,34 @@ static const uint qt_meta_data_server[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   54,    2, 0x06 /* Public */,
+       1,    2,   84,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    2,   59,    2, 0x0a /* Public */,
-       5,    0,   64,    2, 0x0a /* Public */,
-       6,    0,   65,    2, 0x0a /* Public */,
-       7,    0,   66,    2, 0x0a /* Public */,
-       8,    0,   67,    2, 0x0a /* Public */,
-       9,    0,   68,    2, 0x0a /* Public */,
-      10,    1,   69,    2, 0x0a /* Public */,
+       4,    2,   89,    2, 0x0a /* Public */,
+       5,    0,   94,    2, 0x0a /* Public */,
+       6,    0,   95,    2, 0x0a /* Public */,
+       7,    0,   96,    2, 0x0a /* Public */,
+       8,    0,   97,    2, 0x0a /* Public */,
+       9,    1,   98,    2, 0x0a /* Public */,
+      10,    0,  101,    2, 0x0a /* Public */,
+      11,    0,  102,    2, 0x0a /* Public */,
+      12,    0,  103,    2, 0x0a /* Public */,
+      13,    0,  104,    2, 0x0a /* Public */,
+      14,    0,  105,    2, 0x0a /* Public */,
+      15,    0,  106,    2, 0x0a /* Public */,
+      16,    1,  107,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -100,11 +120,17 @@ void server::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 0: _t->signalFromServer((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
         case 1: _t->message((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
         case 2: _t->ui_on(); break;
-        case 3: _t->connectionFromClient(); break;
-        case 4: _t->clientDisconnected(); break;
-        case 5: _t->pause_mpv(); break;
-        case 6: _t->play_mpv(); break;
-        case 7: _t->setVolume_mpv((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: _t->send_startup(); break;
+        case 4: _t->connectionFromClient(); break;
+        case 5: _t->clientDisconnected(); break;
+        case 6: _t->set_time_mpv((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 7: _t->pause_mpv(); break;
+        case 8: _t->play_mpv(); break;
+        case 9: _t->get_file_name(); break;
+        case 10: _t->get_duration(); break;
+        case 11: _t->get_volume(); break;
+        case 12: _t->get_time(); break;
+        case 13: _t->setVolume_mpv((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -145,13 +171,13 @@ int server::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 14;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 14)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 8;
+        _id -= 14;
     }
     return _id;
 }

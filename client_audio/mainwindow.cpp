@@ -8,6 +8,7 @@
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -15,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    this->c_test = new(client);
     song_timer = new QTimer();
     time_value = new QTime();
+    time_value = new QTime(0,0,0,0);
+    time_duration = new QTime(0,0,0,0);
     pause_ms = 1000;
     ui->setupUi(this);
 
@@ -45,15 +48,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_mute, SIGNAL(pressed()), this, SLOT(sl_mute()));
 
     //musicbar
-    ui->horizontalSlider_song->setMinimum(0);
-    ui->horizontalSlider_song->setMaximum(100);
-    ui->lcdNumber_length->display(100);
-    ui->horizontalSlider_song->setValue(25);
+    // is set when gets initial info
+    slider_is_pressed = false;
+    ui->horizontalSlider_song->setPageStep(100);
+    connect(ui->horizontalSlider_song, SIGNAL(sliderPressed()), this, SLOT(slider_song_pressed()));
+    connect(ui->horizontalSlider_song, SIGNAL(sliderReleased()), this, SLOT(slider_song_released()));
 
-    time_value = new QTime(0,0,0,0);
     ui->lcdNumber_time->display(time_value->toString("mm:ss"));
     QObject::connect(song_timer,SIGNAL(timeout()),this,SLOT(setDisplay_timer()));
-    song_timer->start(1000);
+//    song_timer->start(1000);
 
     //language
     connect(ui->pushButton_french, SIGNAL(pressed()), this, SLOT(sl_lang_fra()));
@@ -64,9 +67,31 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 void MainWindow::setDisplay_timer()
 {
-    time_value->setHMS(0,time_value->addSecs(1).minute(),this->time_value->addSecs(1).second());
+    time_value->setHMS(0,time_value->addSecs(1).minute(),time_value->addSecs(1).second());
     ui->lcdNumber_time->display(this->time_value->toString("mm:ss"));
+    int t = time_value->second() + time_value->minute()*60;
+    t++;
+    if (!slider_is_pressed)
+    ui->horizontalSlider_song->setValue(t);
     song_timer->start(1000);
+}
+
+void MainWindow::slider_song_pressed()
+{
+    slider_is_pressed = true;
+}
+
+void MainWindow::slider_song_released()
+{
+    slider_is_pressed = false;
+    //Send_signal
+    int pos = ui->horizontalSlider_song->value();
+    QVariantMap p;
+    p.insert("time_change", pos);
+    time_value->setHMS(0,0,0,0);
+    time_value->setHMS(0,time_value->addSecs(pos).minute(), time_value->addSecs(pos).second());
+    ui->lcdNumber_time->display(this->time_value->toString("mm:ss"));
+    emit signalToClient(kSignalTime, p);
 }
 
 void MainWindow::sl_play()
@@ -128,9 +153,12 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         ui->lineEdit->setText(song_name);
         //duration
         int duration = (params["duration"]).toLongLong();
-        ui->lcdNumber_length->display(duration);
+        ui->horizontalSlider_song->setMaximum(duration);
+        time_duration->setHMS(0,time_duration->addSecs(duration).minute(),time_duration->addSecs(duration).second());
+        ui->lcdNumber_length->display(time_duration->toString("mm:ss"));
         //time
         int t = params["time"].toLongLong();
+        ui->horizontalSlider_song->setValue(t);
         time_value->setHMS( 0,time_value->addSecs(t).minute(),this->time_value->addSecs(t).second());
         ui->lcdNumber_time->display(time_value->toString("mm:ss"));
 
@@ -140,15 +168,27 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         //mute
         bool mute = params["mute"].toBool();
         if (mute) ui->pushButton_mute->setStyleSheet("background-color: red;");
+        //playing
+        pause_ms = params["ms"].toLongLong();
+        if (params["play"].toBool()) song_timer->start(pause_ms);
     }
     if (sig == kSignalPlay)
     {
+        pause_ms = params["pause_ms"].toInt();
         song_timer->start(pause_ms);
     }
     if (sig == kSignalPause)
     {
-        pause_ms = song_timer->remainingTime();
+//        pause_ms = song_timer->remainingTime();
         song_timer->stop();
+    }
+    if (sig == kSignalTime)
+    {
+        int t = params["time_change"].toInt();
+        time_value->setHMS(0,0,0,0);
+        time_value->setHMS(0,time_value->addSecs(t).minute(), time_value->addSecs(t).second());
+        song_timer->stop();
+        song_timer->start(1000);
     }
 
 }

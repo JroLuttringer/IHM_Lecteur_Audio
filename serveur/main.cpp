@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
 
 
     MainWindow w;
-    QThread::usleep(1000);
     server s;
+//        QThread::usleep(1000);
     automate m;
     w.show();
 

@@ -8,6 +8,7 @@
 #include <QFinalState>
 #include <QSignalTransition>
 #include <QTimer>
+#include <QTime>
 #include <QDebug>
 
 
@@ -17,7 +18,9 @@ enum signalType {
     kSignalPlay,
     kSignalPause,
     kSignalVolume,
-    kSignalInfo
+    kSignalInfo,
+    kSignalStartup,
+    kSignalTime
 };
 
 class automate : public QObject
@@ -25,16 +28,21 @@ class automate : public QObject
     Q_OBJECT
 public:
     explicit automate(QObject *parent = 0);
+    bool startup;
+    bool muted;
+    bool playing;
+    int volume;
+    int song_duration;
+    QString song_name;
+    int pause_ms;
 
 private:
-    QString *song_name;
     QTimer *songTimer;
+    QTime *song_time;
     QStateMachine *machine;
     QState *play;
     QState *pause;
 
-    bool muted;
-    int volume;
 //    QState *stop;
 
     //Sous état? car independant des autres
@@ -62,6 +70,8 @@ private slots:
     void send_info();
     void setPause();
     void setVolume(int);
+    void startup_info();
+    void increase_time();
 //    void setStop();
 //    void setMute();
 

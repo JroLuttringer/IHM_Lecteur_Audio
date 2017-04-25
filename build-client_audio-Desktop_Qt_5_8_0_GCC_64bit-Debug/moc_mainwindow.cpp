@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[17];
-    char stringdata0[179];
+    QByteArrayData data[19];
+    char stringdata0[220];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,19 +40,22 @@ QT_MOC_LITERAL(5, 49, 7), // "sl_play"
 QT_MOC_LITERAL(6, 57, 8), // "sl_pause"
 QT_MOC_LITERAL(7, 66, 9), // "sl_volume"
 QT_MOC_LITERAL(8, 76, 16), // "setDisplay_timer"
-QT_MOC_LITERAL(9, 93, 7), // "sl_stop"
-QT_MOC_LITERAL(10, 101, 7), // "sl_next"
-QT_MOC_LITERAL(11, 109, 7), // "sl_back"
-QT_MOC_LITERAL(12, 117, 7), // "sl_mute"
-QT_MOC_LITERAL(13, 125, 11), // "sl_lang_fra"
-QT_MOC_LITERAL(14, 137, 11), // "sl_lang_eng"
-QT_MOC_LITERAL(15, 149, 11), // "sl_lang_ger"
-QT_MOC_LITERAL(16, 161, 17) // "messageFromClient"
+QT_MOC_LITERAL(9, 93, 19), // "slider_song_pressed"
+QT_MOC_LITERAL(10, 113, 20), // "slider_song_released"
+QT_MOC_LITERAL(11, 134, 7), // "sl_stop"
+QT_MOC_LITERAL(12, 142, 7), // "sl_next"
+QT_MOC_LITERAL(13, 150, 7), // "sl_back"
+QT_MOC_LITERAL(14, 158, 7), // "sl_mute"
+QT_MOC_LITERAL(15, 166, 11), // "sl_lang_fra"
+QT_MOC_LITERAL(16, 178, 11), // "sl_lang_eng"
+QT_MOC_LITERAL(17, 190, 11), // "sl_lang_ger"
+QT_MOC_LITERAL(18, 202, 17) // "messageFromClient"
 
     },
     "MainWindow\0signalToClient\0\0signalType\0"
     "closeEvent\0sl_play\0sl_pause\0sl_volume\0"
-    "setDisplay_timer\0sl_stop\0sl_next\0"
+    "setDisplay_timer\0slider_song_pressed\0"
+    "slider_song_released\0sl_stop\0sl_next\0"
     "sl_back\0sl_mute\0sl_lang_fra\0sl_lang_eng\0"
     "sl_lang_ger\0messageFromClient"
 };
@@ -64,7 +67,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      16,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -72,22 +75,24 @@ static const uint qt_meta_data_MainWindow[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   84,    2, 0x06 /* Public */,
+       1,    2,   94,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    0,   89,    2, 0x0a /* Public */,
-       5,    0,   90,    2, 0x0a /* Public */,
-       6,    0,   91,    2, 0x0a /* Public */,
-       7,    1,   92,    2, 0x0a /* Public */,
-       8,    0,   95,    2, 0x0a /* Public */,
-       9,    0,   96,    2, 0x0a /* Public */,
-      10,    0,   97,    2, 0x0a /* Public */,
-      11,    0,   98,    2, 0x0a /* Public */,
-      12,    0,   99,    2, 0x0a /* Public */,
-      13,    0,  100,    2, 0x0a /* Public */,
-      14,    0,  101,    2, 0x0a /* Public */,
-      15,    0,  102,    2, 0x0a /* Public */,
-      16,    2,  103,    2, 0x0a /* Public */,
+       4,    0,   99,    2, 0x0a /* Public */,
+       5,    0,  100,    2, 0x0a /* Public */,
+       6,    0,  101,    2, 0x0a /* Public */,
+       7,    1,  102,    2, 0x0a /* Public */,
+       8,    0,  105,    2, 0x0a /* Public */,
+       9,    0,  106,    2, 0x0a /* Public */,
+      10,    0,  107,    2, 0x0a /* Public */,
+      11,    0,  108,    2, 0x0a /* Public */,
+      12,    0,  109,    2, 0x0a /* Public */,
+      13,    0,  110,    2, 0x0a /* Public */,
+      14,    0,  111,    2, 0x0a /* Public */,
+      15,    0,  112,    2, 0x0a /* Public */,
+      16,    0,  113,    2, 0x0a /* Public */,
+      17,    0,  114,    2, 0x0a /* Public */,
+      18,    2,  115,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
@@ -97,6 +102,8 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -122,14 +129,16 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 3: _t->sl_pause(); break;
         case 4: _t->sl_volume((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 5: _t->setDisplay_timer(); break;
-        case 6: _t->sl_stop(); break;
-        case 7: _t->sl_next(); break;
-        case 8: _t->sl_back(); break;
-        case 9: _t->sl_mute(); break;
-        case 10: _t->sl_lang_fra(); break;
-        case 11: _t->sl_lang_eng(); break;
-        case 12: _t->sl_lang_ger(); break;
-        case 13: _t->messageFromClient((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
+        case 6: _t->slider_song_pressed(); break;
+        case 7: _t->slider_song_released(); break;
+        case 8: _t->sl_stop(); break;
+        case 9: _t->sl_next(); break;
+        case 10: _t->sl_back(); break;
+        case 11: _t->sl_mute(); break;
+        case 12: _t->sl_lang_fra(); break;
+        case 13: _t->sl_lang_eng(); break;
+        case 14: _t->sl_lang_ger(); break;
+        case 15: _t->messageFromClient((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -170,13 +179,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 16)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 16;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 16)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 14;
+        _id -= 16;
     }
     return _id;
 }

@@ -25,12 +25,12 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
-#include <QtWidgets/QSlider>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -54,7 +54,7 @@ public:
     QLineEdit *lineEdit;
     QFrame *frame_song;
     QLCDNumber *lcdNumber_time;
-    QSlider *horizontalSlider_song;
+    MySlider *horizontalSlider_song;
     QLCDNumber *lcdNumber_length;
     QGridLayout *gridLayout_buttons;
     QPushButton *pushButton_mute;
@@ -64,7 +64,7 @@ public:
     QPushButton *pushButton_play;
     QPushButton *pushButton_stop;
     QFrame *frame_sound;
-    QSlider *horizontalSlider_sound;
+    MySlider *horizontalSlider_sound;
     QLabel *label;
     QLabel *label_2;
     QFrame *visible_border_frame;
@@ -163,7 +163,7 @@ public:
         lcdNumber_time->setFrameShadow(QFrame::Plain);
         lcdNumber_time->setLineWidth(2);
         lcdNumber_time->setSmallDecimalPoint(true);
-        horizontalSlider_song = new QSlider(frame_song);
+        horizontalSlider_song = new MySlider(frame_song);
         horizontalSlider_song->setObjectName(QStringLiteral("horizontalSlider_song"));
         horizontalSlider_song->setGeometry(QRect(20, 10, 451, 31));
         horizontalSlider_song->setOrientation(Qt::Horizontal);
@@ -250,7 +250,7 @@ public:
         frame_sound->setMinimumSize(QSize(200, 60));
         frame_sound->setFrameShape(QFrame::StyledPanel);
         frame_sound->setFrameShadow(QFrame::Raised);
-        horizontalSlider_sound = new QSlider(frame_sound);
+        horizontalSlider_sound = new MySlider(frame_sound);
         horizontalSlider_sound->setObjectName(QStringLiteral("horizontalSlider_sound"));
         horizontalSlider_sound->setGeometry(QRect(60, 10, 211, 41));
         horizontalSlider_sound->setOrientation(Qt::Horizontal);

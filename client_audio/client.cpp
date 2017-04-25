@@ -49,6 +49,8 @@ void client::serverMessageLoop()
         if (jsonObject["signal"]== "info") emit signalFromClient(kSignalInfo, jsonObject.toVariantMap());
         if (jsonObject["signal"]== "play") emit signalFromClient(kSignalPlay, jsonObject.toVariantMap());
         if (jsonObject["signal"]== "pause") emit signalFromClient(kSignalPause, jsonObject.toVariantMap());
+        if (jsonObject.contains("time_change")) emit signalFromClient(kSignalTime, jsonObject.toVariantMap());
+
     }
 }
 
@@ -119,6 +121,9 @@ void client::sl_volume(int vol)
 
 void client::messageFromUI(signalType sig, QVariantMap params) {
     qDebug("received message from UI");
+
+    QJsonObject jsonObject;
+    QByteArray bytes;
   switch(sig){
   case kSignalPlay:
         sl_play();
@@ -131,8 +136,14 @@ void client::messageFromUI(signalType sig, QVariantMap params) {
         vol= params["volume"].toLongLong();
         sl_volume(vol);
       break;
-   case kSignalInfo:
-      sl_info();
+  case kSignalTime:
+      jsonObject["time_change"] = params["time_change"].toInt();
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
       break;
 
   default:

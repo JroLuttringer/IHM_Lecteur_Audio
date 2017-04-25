@@ -18,7 +18,9 @@ enum signalType
     kSignalPlay,
     kSignalPause,
     kSignalVolume,
-    kSignalInfo
+    kSignalInfo,
+    kSignalStartup,
+    kSignalTime
 };
 
 class client : public QObject

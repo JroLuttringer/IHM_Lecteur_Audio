@@ -199,7 +199,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QSlider" name="horizontalSlider_song">
+       <widget class="MySlider" name="horizontalSlider_song">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -426,7 +426,7 @@
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <widget class="QSlider" name="horizontalSlider_sound">
+         <widget class="MySlider" name="horizontalSlider_sound">
           <property name="geometry">
            <rect>
             <x>60</x>
@@ -524,6 +524,13 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MySlider</class>
+   <extends>QSlider</extends>
+   <header>mainwindow.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>
