@@ -20,7 +20,6 @@
 #include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -28,6 +27,7 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "mainwindow.h"
@@ -42,7 +42,7 @@ public:
     QVBoxLayout *verticalLayout_left;
     QScrollArea *scrollArea_frame;
     QWidget *scrollAreaWidgetContents;
-    QListView *listView_media_selection;
+    QTreeWidget *treeWidget;
     QFrame *verticalFrame_right;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *language_layout;
@@ -93,9 +93,9 @@ public:
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
         scrollAreaWidgetContents->setGeometry(QRect(0, 0, 337, 537));
-        listView_media_selection = new QListView(scrollAreaWidgetContents);
-        listView_media_selection->setObjectName(QStringLiteral("listView_media_selection"));
-        listView_media_selection->setGeometry(QRect(20, 21, 301, 501));
+        treeWidget = new QTreeWidget(scrollAreaWidgetContents);
+        treeWidget->setObjectName(QStringLiteral("treeWidget"));
+        treeWidget->setGeometry(QRect(15, 11, 311, 511));
         scrollArea_frame->setWidget(scrollAreaWidgetContents);
 
         verticalLayout_left->addWidget(scrollArea_frame);
@@ -298,6 +298,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+        QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
+        ___qtreewidgetitem->setText(0, QApplication::translate("MainWindow", "Media", Q_NULLPTR));
         pushButton_french->setText(QApplication::translate("MainWindow", "FRA", Q_NULLPTR));
         pushButton_english->setText(QApplication::translate("MainWindow", "ENG", Q_NULLPTR));
         pushButton_german->setText(QApplication::translate("MainWindow", "GER", Q_NULLPTR));

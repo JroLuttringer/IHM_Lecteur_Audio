@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>632</width>
+    <height>601</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QRadioButton" name="radioButton">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>60</y>
+      <x>560</x>
+      <y>120</y>
       <width>31</width>
       <height>21</height>
      </rect>
@@ -33,8 +33,8 @@
    <widget class="QPushButton" name="butto_serv">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>100</y>
+      <x>520</x>
+      <y>80</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -43,25 +43,56 @@
      <string>ON / OFF</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>10</y>
-      <width>258</width>
-      <height>225</height>
+      <x>30</x>
+      <y>20</y>
+      <width>461</width>
+      <height>491</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QListView" name="listView"/>
+      <widget class="QTreeWidget" name="treeWidget">
+       <column>
+        <property name="text">
+         <string>Media</string>
+        </property>
+       </column>
+      </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>Add Media</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton_file">
+         <property name="text">
+          <string>Add File</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_list">
+         <property name="text">
+          <string>Add List</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_save">
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_reset">
+         <property name="text">
+          <string>Reset</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -71,7 +102,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>632</width>
      <height>22</height>
     </rect>
    </property>

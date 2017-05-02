@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[19];
-    char stringdata0[220];
+    QByteArrayData data[23];
+    char stringdata0[298];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -49,7 +49,11 @@ QT_MOC_LITERAL(14, 158, 7), // "sl_mute"
 QT_MOC_LITERAL(15, 166, 11), // "sl_lang_fra"
 QT_MOC_LITERAL(16, 178, 11), // "sl_lang_eng"
 QT_MOC_LITERAL(17, 190, 11), // "sl_lang_ger"
-QT_MOC_LITERAL(18, 202, 17) // "messageFromClient"
+QT_MOC_LITERAL(18, 202, 17), // "messageFromClient"
+QT_MOC_LITERAL(19, 220, 25), // "load_children_from_string"
+QT_MOC_LITERAL(20, 246, 12), // "QTextStream*"
+QT_MOC_LITERAL(21, 259, 16), // "QTreeWidgetItem*"
+QT_MOC_LITERAL(22, 276, 21) // "load_tree_from_string"
 
     },
     "MainWindow\0signalToClient\0\0signalType\0"
@@ -57,7 +61,9 @@ QT_MOC_LITERAL(18, 202, 17) // "messageFromClient"
     "setDisplay_timer\0slider_song_pressed\0"
     "slider_song_released\0sl_stop\0sl_next\0"
     "sl_back\0sl_mute\0sl_lang_fra\0sl_lang_eng\0"
-    "sl_lang_ger\0messageFromClient"
+    "sl_lang_ger\0messageFromClient\0"
+    "load_children_from_string\0QTextStream*\0"
+    "QTreeWidgetItem*\0load_tree_from_string"
 };
 #undef QT_MOC_LITERAL
 
@@ -67,7 +73,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   14, // methods
+      18,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -75,24 +81,26 @@ static const uint qt_meta_data_MainWindow[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   94,    2, 0x06 /* Public */,
+       1,    2,  104,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    0,   99,    2, 0x0a /* Public */,
-       5,    0,  100,    2, 0x0a /* Public */,
-       6,    0,  101,    2, 0x0a /* Public */,
-       7,    1,  102,    2, 0x0a /* Public */,
-       8,    0,  105,    2, 0x0a /* Public */,
-       9,    0,  106,    2, 0x0a /* Public */,
-      10,    0,  107,    2, 0x0a /* Public */,
-      11,    0,  108,    2, 0x0a /* Public */,
-      12,    0,  109,    2, 0x0a /* Public */,
-      13,    0,  110,    2, 0x0a /* Public */,
-      14,    0,  111,    2, 0x0a /* Public */,
-      15,    0,  112,    2, 0x0a /* Public */,
-      16,    0,  113,    2, 0x0a /* Public */,
-      17,    0,  114,    2, 0x0a /* Public */,
-      18,    2,  115,    2, 0x0a /* Public */,
+       4,    0,  109,    2, 0x0a /* Public */,
+       5,    0,  110,    2, 0x0a /* Public */,
+       6,    0,  111,    2, 0x0a /* Public */,
+       7,    1,  112,    2, 0x0a /* Public */,
+       8,    0,  115,    2, 0x0a /* Public */,
+       9,    0,  116,    2, 0x0a /* Public */,
+      10,    0,  117,    2, 0x0a /* Public */,
+      11,    0,  118,    2, 0x0a /* Public */,
+      12,    0,  119,    2, 0x0a /* Public */,
+      13,    0,  120,    2, 0x0a /* Public */,
+      14,    0,  121,    2, 0x0a /* Public */,
+      15,    0,  122,    2, 0x0a /* Public */,
+      16,    0,  123,    2, 0x0a /* Public */,
+      17,    0,  124,    2, 0x0a /* Public */,
+      18,    2,  125,    2, 0x0a /* Public */,
+      19,    2,  130,    2, 0x0a /* Public */,
+      22,    1,  135,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
@@ -113,6 +121,8 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
+    QMetaType::Void, 0x80000000 | 20, 0x80000000 | 21,    2,    2,
+    QMetaType::Void, QMetaType::QString,    2,
 
        0        // eod
 };
@@ -139,6 +149,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 13: _t->sl_lang_eng(); break;
         case 14: _t->sl_lang_ger(); break;
         case 15: _t->messageFromClient((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
+        case 16: _t->load_children_from_string((*reinterpret_cast< QTextStream*(*)>(_a[1])),(*reinterpret_cast< QTreeWidgetItem*(*)>(_a[2]))); break;
+        case 17: _t->load_tree_from_string((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -179,13 +191,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 16)
+        if (_id < 18)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        _id -= 18;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 16)
+        if (_id < 18)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 16;
+        _id -= 18;
     }
     return _id;
 }

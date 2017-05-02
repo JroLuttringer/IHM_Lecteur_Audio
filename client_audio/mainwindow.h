@@ -14,6 +14,7 @@
 #include <QTime>
 #include <QSlider>
 #include <QMouseEvent>
+#include <QTreeWidgetItem>
 #include "client.h"
 
 class MySlider : public QSlider
@@ -82,6 +83,10 @@ public slots:
 //    void sl_set_time();
 
     void messageFromClient(signalType, QVariantMap);
+
+
+    void load_children_from_string(QTextStream*, QTreeWidgetItem*);
+    void load_tree_from_string(QString);
 };
 
 #endif // MAINWINDOW_H

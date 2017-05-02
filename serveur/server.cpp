@@ -51,50 +51,58 @@ server::server(QObject *parent) :
     }
     connect(m_server, SIGNAL(newConnection()), this, SLOT(connectionFromClient()));
     qDebug() << "eof creator" << socket_list.size();
+
+
 }
 
 void server::connectionFromClient()
 {   qDebug() << "Connection from client" << socket_list.size();
     if(socket_list.count() == 0)
     {
-        qDebug() << "count = 0";
-        m_test1 = m_server->nextPendingConnection();
-        qDebug() << "accepted in m_test1";
-        socket_list.append(m_test1);
-        qDebug() << "setting the first connection " << socket_list.count();
         m_running=true;
+
+        m_test1 = m_server->nextPendingConnection();
+        socket_list.append(m_test1);
         m_serverLoopThread=QtConcurrent::run(this, &server::clientMessageLoop);
-        qDebug() << "i'm trying to make sockets baby";
+            connect(m_test1, SIGNAL(disconnected()), m_test1, SLOT(deleteLater()));
+            connect(m_test1, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
         return;
     }
     else if(socket_list.count() == 1)
     {
-        qDebug() << "making second co";
-        socket_list.append(m_server->nextPendingConnection());
+        m_running2=true;
+
+        m_test2 = m_server->nextPendingConnection();
+        socket_list.append(m_test2);
         m_serverLoopThread2=QtConcurrent::run(this, &server::clientMessageLoop2);
+        connect(m_test2, SIGNAL(disconnected()), m_test2, SLOT(deleteLater()));
+        connect(m_test2, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
         return;
     }
     else if(socket_list.count() == 2)
     {
-        socket_list.value(2, m_server->nextPendingConnection());
+        socket_list.append(m_server->nextPendingConnection());
         return;
     }
     else if(socket_list.count() == 3)
     {
-        socket_list.value(3, m_server->nextPendingConnection());
+        socket_list.append(m_server->nextPendingConnection());
         return;
     }
     else qDebug() << "Too many clients";
     qDebug() << "ça crash pas icic bouffon";
-//    connect(m_client, SIGNAL(disconnected()), m_client, SLOT(deleteLater()));
-//    connect(m_client, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
 }
 
 //Quand un client se déconnecte, on l’annule :
 void server::clientDisconnected()
 {
-    m_client = nullptr;
-
+    QLocalSocket* send = qobject_cast<QLocalSocket*>( QObject::sender() );
+    int pos = socket_list.indexOf(send);
+    qDebug() << "deleting client " << pos;
+    socket_list.removeAt(pos);
+    send = nullptr;
+    if(!pos) m_running = false;
+    if(pos==1) m_running2 =false;
 }
 
 
@@ -159,7 +167,7 @@ void server::clientMessageLoop()
 void server::clientMessageLoop2()
 {
     m_client2 = socket_list.at(1);
-    while (m_running){
+    while (m_running2){
     QDataStream in(m_client2);
     if (in.atEnd()){ // Rien dans la file d'attente
     QThread::msleep(100); // On attend 1/10s et on continue
@@ -296,7 +304,8 @@ void server::message(signalType sig, QVariantMap params) {
                   m_test1->flush();
               }
           }
-          qDebug() << "sent info to all clients";
+          qDebug() << "sent info to all clients now sending trees";
+          send_tree_from_file();
       break;
   case kSignalStartup:
 
@@ -306,12 +315,14 @@ void server::message(signalType sig, QVariantMap params) {
         set_time_mpv(t);
         jsonObject = jsonObject.fromVariantMap(params);
         bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
-        for(int i=0; i<2; i++)
+        for(int i=0; i<socket_list.count(); i++)
         {
-            if (socket_list.at(0) != NULL)
+            if (m_test1) m_test1 = socket_list.at(i);
+            if (m_test1 != NULL)
             {
-                socket_list.at(0)->write(bytes.data(), bytes.length());
-                socket_list.at(0)->flush();
+                qDebug() << "not null";
+                m_test1->write(bytes.data(), bytes.length());
+                m_test1->flush();
             }
         }
       break;
@@ -319,6 +330,37 @@ void server::message(signalType sig, QVariantMap params) {
   default:
       break;
   }
+}
+
+void server::send_tree_from_file()
+{
+    QFile file("/home/cyrille/test/save.txt");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream in(&file);
+    QString line;
+    while (!in.atEnd())
+       {
+          line = line + in.readLine() + "\n";
+
+       }
+
+    QJsonObject jsonObject;
+    QByteArray bytes;
+    jsonObject.insert("signal","tree_init");
+    jsonObject.insert("data", line);
+    bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
+    for(int i=0; i<socket_list.count(); i++)
+    {
+        if (m_test1) m_test1 = socket_list.at(i);
+        if (m_test1 != NULL)
+        {
+            qDebug() << "not null";
+            m_test1->write(bytes.data(), bytes.length());
+            m_test1->flush();
+        }
+    }
+    file.close();
 }
 
 
@@ -332,9 +374,22 @@ void server::message(signalType sig, QVariantMap params) {
 
 
 
-
-
 //fonction vers mpv
+
+
+void server::load_file_mpv(QString file_name)
+{
+    QJsonObject jsonObject;
+    QJsonArray request;
+    request << "loadfile" << file_name;
+    jsonObject.insert("command",request);
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+    if (m_mpv != NULL) {
+        m_mpv->write(bytes.data(), bytes.length());
+        m_mpv->flush();
+    }
+}
+
 void server::set_time_mpv(int t){
     // Je crée des objets JSON pour préparer la requete
     QJsonObject jsonObject;

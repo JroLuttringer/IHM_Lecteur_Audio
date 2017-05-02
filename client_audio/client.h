@@ -20,7 +20,8 @@ enum signalType
     kSignalVolume,
     kSignalInfo,
     kSignalStartup,
-    kSignalTime
+    kSignalTime,
+    kSignalTree
 };
 
 class client : public QObject
@@ -32,6 +33,7 @@ public:
     explicit client(QObject *parent = 0);
     void serverMessageLoop();
     bool m_running;
+    bool setup = false;
     QFuture<void> m_clientLoopThread;
     ~client();
 

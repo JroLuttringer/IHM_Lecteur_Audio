@@ -38,15 +38,20 @@
           <height>537</height>
          </rect>
         </property>
-        <widget class="QListView" name="listView_media_selection">
+        <widget class="QTreeWidget" name="treeWidget">
          <property name="geometry">
           <rect>
-           <x>20</x>
-           <y>21</y>
-           <width>301</width>
-           <height>501</height>
+           <x>15</x>
+           <y>11</y>
+           <width>311</width>
+           <height>511</height>
           </rect>
          </property>
+         <column>
+          <property name="text">
+           <string>Media</string>
+          </property>
+         </column>
         </widget>
        </widget>
       </widget>

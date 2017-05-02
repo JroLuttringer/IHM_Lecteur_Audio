@@ -154,11 +154,13 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         //duration
         int duration = (params["duration"]).toLongLong();
         ui->horizontalSlider_song->setMaximum(duration);
+        time_duration->setHMS(0,0,0,0);
         time_duration->setHMS(0,time_duration->addSecs(duration).minute(),time_duration->addSecs(duration).second());
         ui->lcdNumber_length->display(time_duration->toString("mm:ss"));
         //time
         int t = params["time"].toLongLong();
         ui->horizontalSlider_song->setValue(t);
+        time_value->setHMS(0,0,0,0);
         time_value->setHMS( 0,time_value->addSecs(t).minute(),this->time_value->addSecs(t).second());
         ui->lcdNumber_time->display(time_value->toString("mm:ss"));
 
@@ -190,7 +192,71 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         song_timer->stop();
         song_timer->start(1000);
     }
+    if (sig == kSignalTree)
+    {
+        //init tree widget
+        qDebug() << "I'm gonna load tree casue signal" << kSignalTree;
+        QString tree = params["data"].toString();
+        load_tree_from_string(tree);
+    }
 
+}
+
+void MainWindow::load_children_from_string(QTextStream* in, QTreeWidgetItem* parent)
+{
+              QTreeWidgetItem *item = new QTreeWidgetItem();
+    while (!in->atEnd())
+       {
+          QString line = in->readLine();
+
+//          QTreeWidgetItem *item = new QTreeWidgetItem();
+          if (line == "dir")
+          {
+               load_children_from_string(in, item);
+          }
+          else if (line == "end_dir")
+          {
+              break;
+          }
+          else
+          {
+              item = new QTreeWidgetItem();
+              item->setText(0,line);
+          }
+          parent->addChild(item);
+       }
+}
+
+void MainWindow::load_tree_from_string(QString tree)
+{
+    qDebug() << "Trying to load tree";
+    QFile file("./testfile");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    out << tree;
+    file.close();
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QTextStream in(&file);
+    QTreeWidgetItem *item = new QTreeWidgetItem();
+
+    while (!in.atEnd())
+       {
+          QString line = in.readLine();
+
+          if (line == "dir")
+          {
+              load_children_from_string(&in, item);
+
+          }
+          else
+          {
+              item = new QTreeWidgetItem();
+              item->setText(0,line);
+          }
+          ui->treeWidget->addTopLevelItem(item);
+       }
 }
 
 

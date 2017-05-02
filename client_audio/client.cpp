@@ -49,6 +49,11 @@ void client::serverMessageLoop()
         if (jsonObject["signal"]== "info") emit signalFromClient(kSignalInfo, jsonObject.toVariantMap());
         if (jsonObject["signal"]== "play") emit signalFromClient(kSignalPlay, jsonObject.toVariantMap());
         if (jsonObject["signal"]== "pause") emit signalFromClient(kSignalPause, jsonObject.toVariantMap());
+        if (jsonObject["signal"]== "tree_init" && !setup)
+        {
+            emit signalFromClient(kSignalTree, jsonObject.toVariantMap());
+            setup = true;
+        }
         if (jsonObject.contains("time_change")) emit signalFromClient(kSignalTime, jsonObject.toVariantMap());
 
     }
