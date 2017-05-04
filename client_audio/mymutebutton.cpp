@@ -10,9 +10,7 @@
 MyMuteButton::MyMuteButton(QWidget *parent):QWidget(parent){
     this->pixmap_mute = new QPixmap(this->muted_path);
     this->pixmap_not_mute = new QPixmap(this->not_muted_path);
-
     this->muted = false;
-
     press = false;
 }
 

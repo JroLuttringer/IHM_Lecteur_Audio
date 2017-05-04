@@ -399,7 +399,7 @@ void MainWindow::load_children_from_string(QTextStream* in, QTreeWidgetItem* par
 void MainWindow::load_tree_from_string(QString tree)
 {
     qDebug() << "Trying to load tree";
-    QFile file("./testfile");
+    QFile file(TREE_FILE);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
     out << tree;

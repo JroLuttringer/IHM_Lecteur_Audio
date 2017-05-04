@@ -17,6 +17,10 @@
 #include <QTreeWidgetItem>
 #include "client.h"
 
+#define SERVER_NAME "test"
+#define TREE_FILE "./testfile"
+
+
 class MySlider : public QSlider
 {
 public:

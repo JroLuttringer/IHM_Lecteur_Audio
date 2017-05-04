@@ -10,6 +10,8 @@
 #include "server.h"
 #include "automate.h"
 
+#define SAVE_FILE "./save.txt"
+
 namespace Ui {
 class MainWindow;
 }

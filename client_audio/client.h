@@ -10,6 +10,7 @@
 #define CLIENT_H
 
 #define SERVER_NAME "test"
+#define TREE_FILE "./testfile"
 #include <QObject>
 #include <QLocalSocket>
 #include <QtConcurrent/QtConcurrent>
