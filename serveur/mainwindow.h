@@ -36,6 +36,7 @@ private:
 signals:
     void signal_on();
     void change_song(QString);
+    void signalUI(signalType, QVariantMap);
 
 public slots:
     void send_pressed();

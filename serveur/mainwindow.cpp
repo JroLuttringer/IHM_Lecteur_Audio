@@ -65,7 +65,9 @@ void MainWindow::search_file()
     QTreeWidgetItem * item = new QTreeWidgetItem();
     item->setText(0,file);
     ui->treeWidget->addTopLevelItem(item);
-
+    save_tree_to_file();
+    QVariantMap p;
+    emit signalUI(kSignalTree, p);
 }
 
 void MainWindow::add_directory(QDir *dir, QTreeWidgetItem *parent)
@@ -129,6 +131,9 @@ void MainWindow::search_list()
 
 
     ui->treeWidget->addTopLevelItem(item);
+    save_tree_to_file();
+    QVariantMap p;
+    emit signalUI(kSignalTree, p);
 
 }
 

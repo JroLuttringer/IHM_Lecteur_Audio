@@ -6,8 +6,8 @@
 [ ] - Faire le paintEvent lorsqu'on reçoit MUTE
 [ ] - Implementer le bouton qui allume ou éteint le serveur
 [ ] - Sauvegarder l'état du serveur (song time-pos volume mute play/pause)
-[ ] - Implementer le renvoi de l'arbre lors d'ajout de fichier/dossiers
-[ ] - Nom des fichiers en dur
+[X] - Implementer le renvoi de l'arbre lors d'ajout de fichier/dossiers
+[ ] - Nom des fichiers en dur/sockets
 
 
 //Moins FACILE

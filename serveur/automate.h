@@ -33,7 +33,8 @@ enum signalType {
     kSignalList,
     kSignalLang,
     kSignalMute,
-    kSignalEvent
+    kSignalEvent,
+    kSignalQuit
 };
 
 class automate : public QObject

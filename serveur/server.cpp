@@ -76,14 +76,14 @@ void server::clientDisconnected()
 void server::clientMessageLoop()
 {
     int c = 0;
-    m_client = socket_list.at(c);
+    if (socket_list.size()) m_client = socket_list.at(c);
     while (m_running)
     {
         QDataStream in(m_client);
         if (in.atEnd()){ // Rien dans la file d'attente
             c = (c+1) % (socket_list.size());
             m_client = socket_list.at(c);
-    //        QThread::msleep(100); // On attend 1/10s et on continue
+            QThread::msleep(100); // On attend 1/10s et on continue
         continue;
         }
         QString str = QString(in.device()->readLine());
@@ -94,7 +94,11 @@ void server::clientMessageLoop()
         QJsonObject jsonObject=jDoc.object();
         qDebug() << str;
         QVariantMap params;
-        if (!jsonObject.contains("signal")) continue;
+        if (!jsonObject.contains("signal"))
+        {
+            qDebug() << "no signal, this is a disconnect";
+            continue;
+        }
         switch(jsonObject["signal"].toInt())
         {
             case kSignalPlay:
@@ -143,6 +147,9 @@ void server::clientMessageLoop()
                 break;
             case kSignalMute:
                 break;
+        case kSignalQuit:
+            qDebug() << "client sent quit message";
+            break;
             default:
                 qDebug() << "not yet implemented";
             break;
@@ -209,6 +216,7 @@ void server::message(signalType sig, QVariantMap params) {
 
       break;
   case kSignalTree:
+      send_tree_from_file();
       break;
   case kSignalStop:
       break;

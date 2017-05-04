@@ -233,6 +233,14 @@ void client::messageFromUI(signalType sig, QVariantMap params) {
 //      sl_info();
       break;
   case kSignalQuit:
+      jsonObject["signal"] = kSignalQuit;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      QThread::msleep(1000);
          this->~client();
   break;
   case kSignalStop:
