@@ -39,6 +39,7 @@ signals:
     void signalUI(signalType, QVariantMap);
 
 public slots:
+    void closeEvent();
     void send_pressed();
 
 

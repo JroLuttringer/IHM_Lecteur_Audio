@@ -221,11 +221,39 @@ QStringList MainWindow::visitTree(QTreeWidget *tree)
     return list;
 }
 
+void MainWindow::closeEvent()
+{
+    //Save preferences
+    //Song_name
+    //muted
+    //playing
+    //volume
+    //time-pos
+    //duration
+    //
+    myProcess->close();
+
+    if(myProcess)
+    {
+    delete myProcess;
+    myProcess = NULL;
+    }
+
+
+    delete ui;
+}
 
 
 MainWindow::~MainWindow()
 {
-    myProcess->kill();
+    myProcess->close();
+
+    if(myProcess)
+    {
     delete myProcess;
+    myProcess = NULL;
+    }
+//    myProcess->kill();
+//    delete myProcess;
     delete ui;
 }

@@ -31,6 +31,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "mainwindow.h"
+#include "mymutebutton.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -57,7 +58,6 @@ public:
     MySlider *horizontalSlider_song;
     QLCDNumber *lcdNumber_length;
     QGridLayout *gridLayout_buttons;
-    QPushButton *pushButton_mute;
     QPushButton *pushButton_back;
     QPushButton *pushButton_pause;
     QPushButton *pushButton_next;
@@ -67,6 +67,7 @@ public:
     MySlider *horizontalSlider_sound;
     QLabel *label;
     QLabel *label_2;
+    MyMuteButton *pushButton_mute;
     QFrame *visible_border_frame;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -179,24 +180,13 @@ public:
         gridLayout_buttons->setHorizontalSpacing(10);
         gridLayout_buttons->setVerticalSpacing(30);
         gridLayout_buttons->setContentsMargins(-1, 30, -1, 10);
-        pushButton_mute = new QPushButton(verticalFrame_right);
-        pushButton_mute->setObjectName(QStringLiteral("pushButton_mute"));
-        pushButton_mute->setMinimumSize(QSize(50, 50));
-        pushButton_mute->setMaximumSize(QSize(50, 16777215));
-        QIcon icon;
-        icon.addFile(QStringLiteral(":/new/prefix1/resource/mute_2.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pushButton_mute->setIcon(icon);
-        pushButton_mute->setIconSize(QSize(32, 32));
-
-        gridLayout_buttons->addWidget(pushButton_mute, 1, 0, 1, 1);
-
         pushButton_back = new QPushButton(verticalFrame_right);
         pushButton_back->setObjectName(QStringLiteral("pushButton_back"));
         pushButton_back->setMinimumSize(QSize(50, 50));
         pushButton_back->setMaximumSize(QSize(50, 16777215));
-        QIcon icon1;
-        icon1.addFile(QStringLiteral(":/new/prefix1/resource/back.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pushButton_back->setIcon(icon1);
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/new/prefix1/resource/back.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton_back->setIcon(icon);
         pushButton_back->setIconSize(QSize(32, 32));
 
         gridLayout_buttons->addWidget(pushButton_back, 0, 0, 1, 1);
@@ -205,9 +195,9 @@ public:
         pushButton_pause->setObjectName(QStringLiteral("pushButton_pause"));
         pushButton_pause->setMinimumSize(QSize(50, 50));
         pushButton_pause->setMaximumSize(QSize(50, 16777215));
-        QIcon icon2;
-        icon2.addFile(QStringLiteral(":/new/prefix1/resource/pause_2.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pushButton_pause->setIcon(icon2);
+        QIcon icon1;
+        icon1.addFile(QStringLiteral(":/new/prefix1/resource/pause_2.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton_pause->setIcon(icon1);
         pushButton_pause->setIconSize(QSize(44, 44));
 
         gridLayout_buttons->addWidget(pushButton_pause, 0, 3, 1, 1);
@@ -216,9 +206,10 @@ public:
         pushButton_next->setObjectName(QStringLiteral("pushButton_next"));
         pushButton_next->setMinimumSize(QSize(50, 50));
         pushButton_next->setMaximumSize(QSize(50, 16777215));
-        QIcon icon3;
-        icon3.addFile(QStringLiteral(":/new/prefix1/resource/next.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pushButton_next->setIcon(icon3);
+        pushButton_next->setAutoFillBackground(false);
+        QIcon icon2;
+        icon2.addFile(QStringLiteral(":/new/prefix1/resource/next.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton_next->setIcon(icon2);
         pushButton_next->setIconSize(QSize(32, 32));
 
         gridLayout_buttons->addWidget(pushButton_next, 0, 4, 1, 1);
@@ -227,9 +218,9 @@ public:
         pushButton_play->setObjectName(QStringLiteral("pushButton_play"));
         pushButton_play->setMinimumSize(QSize(50, 50));
         pushButton_play->setMaximumSize(QSize(50, 16777215));
-        QIcon icon4;
-        icon4.addFile(QStringLiteral(":/new/prefix1/resource/play.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pushButton_play->setIcon(icon4);
+        QIcon icon3;
+        icon3.addFile(QStringLiteral(":/new/prefix1/resource/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton_play->setIcon(icon3);
         pushButton_play->setIconSize(QSize(32, 32));
 
         gridLayout_buttons->addWidget(pushButton_play, 0, 2, 1, 1);
@@ -238,9 +229,9 @@ public:
         pushButton_stop->setObjectName(QStringLiteral("pushButton_stop"));
         pushButton_stop->setMinimumSize(QSize(50, 50));
         pushButton_stop->setMaximumSize(QSize(50, 16777215));
-        QIcon icon5;
-        icon5.addFile(QStringLiteral(":/new/prefix1/resource/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pushButton_stop->setIcon(icon5);
+        QIcon icon4;
+        icon4.addFile(QStringLiteral(":/new/prefix1/resource/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButton_stop->setIcon(icon4);
         pushButton_stop->setIconSize(QSize(32, 32));
 
         gridLayout_buttons->addWidget(pushButton_stop, 0, 1, 1, 1);
@@ -248,6 +239,7 @@ public:
         frame_sound = new QFrame(verticalFrame_right);
         frame_sound->setObjectName(QStringLiteral("frame_sound"));
         frame_sound->setMinimumSize(QSize(200, 60));
+        frame_sound->setMaximumSize(QSize(16777215, 60));
         frame_sound->setFrameShape(QFrame::StyledPanel);
         frame_sound->setFrameShadow(QFrame::Raised);
         horizontalSlider_sound = new MySlider(frame_sound);
@@ -266,6 +258,12 @@ public:
         label_2->setScaledContents(true);
 
         gridLayout_buttons->addWidget(frame_sound, 1, 1, 1, 4);
+
+        pushButton_mute = new MyMuteButton(verticalFrame_right);
+        pushButton_mute->setObjectName(QStringLiteral("pushButton_mute"));
+        pushButton_mute->setMaximumSize(QSize(16777215, 50));
+
+        gridLayout_buttons->addWidget(pushButton_mute, 1, 0, 1, 1);
 
 
         verticalLayout_2->addLayout(gridLayout_buttons);
@@ -304,7 +302,6 @@ public:
         pushButton_english->setText(QApplication::translate("MainWindow", "ENG", Q_NULLPTR));
         pushButton_german->setText(QApplication::translate("MainWindow", "GER", Q_NULLPTR));
         lineEdit->setText(QString());
-        pushButton_mute->setText(QString());
         pushButton_back->setText(QString());
         pushButton_pause->setText(QString());
         pushButton_next->setText(QString());

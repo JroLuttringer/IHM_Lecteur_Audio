@@ -16,5 +16,7 @@
         <file>resource/volume_mixer.png</file>
         <file>resource/pause_2.png</file>
         <file>resource/mute_2.png</file>
+        <file>resource/mute_3.png</file>
+        <file>resource/unmute_3.svg</file>
     </qresource>
 </RCC>

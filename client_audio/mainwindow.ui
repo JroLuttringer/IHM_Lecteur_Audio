@@ -243,35 +243,6 @@
        <property name="verticalSpacing">
         <number>30</number>
        </property>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_mute">
-         <property name="minimumSize">
-          <size>
-           <width>50</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="resources.qrc">
-           <normaloff>:/new/prefix1/resource/mute_2.png</normaloff>:/new/prefix1/resource/mute_2.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>32</width>
-           <height>32</height>
-          </size>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="pushButton_back">
          <property name="minimumSize">
@@ -343,6 +314,9 @@
            <width>50</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
          </property>
          <property name="text">
           <string/>
@@ -425,6 +399,12 @@
            <height>60</height>
           </size>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>60</height>
+          </size>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -484,6 +464,16 @@
          </widget>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="MyMuteButton" name="pushButton_mute" native="true">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
@@ -534,6 +524,12 @@
    <class>MySlider</class>
    <extends>QSlider</extends>
    <header>mainwindow.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MyMuteButton</class>
+   <extends>QWidget</extends>
+   <header>mymutebutton.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

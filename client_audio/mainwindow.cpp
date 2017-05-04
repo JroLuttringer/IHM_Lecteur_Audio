@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->horizontalSlider_sound, SIGNAL(sliderPressed()), this, SLOT(slider_sound_pressed()));
     connect(ui->horizontalSlider_sound, SIGNAL(sliderReleased()), this, SLOT(slider_sound_released()));
     //mute
-    connect(ui->pushButton_mute, SIGNAL(pressed()), this, SLOT(sl_mute()));
+    connect(ui->pushButton_mute, SIGNAL(mute()), this, SLOT(sl_mute()));
 
     //musicbar
     // is set when gets initial info
@@ -123,14 +123,6 @@ void MainWindow::sl_pause()
     QVariantMap params;
     emit signalToClient(kSignalPause, params);
 }
-//void MainWindow::sl_volume(int vol)
-//{
-//    QVariantMap params;
-//    params.insert("volume", vol);
-//    emit signalToClient(kSignalVolume, params);
-//    qDebug("in sl_volume");
-//}
-
 void MainWindow::sl_stop()
 {
     QVariantMap p;
@@ -230,14 +222,14 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
     QString song_name;
     switch(sig)
     {
-        case kSignalPlay:
-        pause_ms = params["pause_ms"].toInt() - 100;
+     case kSignalPlay:
+        pause_ms = params["pause_ms"].toInt();
         song_timer->start(pause_ms);
             break;
-        case kSignalPause:
+     case kSignalPause:
         song_timer->stop();
             break;
-        case kSignalInfo:
+     case kSignalInfo:
         qDebug("Setting up UI");
         //song_name
         song_name = params["song_name"].toString();
@@ -249,7 +241,7 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         time_duration->setHMS(0,time_duration->addSecs(duration).minute(),time_duration->addSecs(duration).second());
         ui->lcdNumber_length->display(time_duration->toString("mm:ss"));
         //time
-        t = params["time"].toLongLong();
+        t = params["time"].toInt();
         ui->horizontalSlider_song->setValue(t);
         time_value->setHMS(0,0,0,0);
         time_value->setHMS( 0,time_value->addSecs(t).minute(),this->time_value->addSecs(t).second());
@@ -260,12 +252,14 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         if (!sound_pressed) ui->horizontalSlider_sound->setValue(vol);
         //mute
         mute = params["mute"].toBool();
-        if (mute) ui->pushButton_mute->setStyleSheet("background-color: red;");
+        ui->pushButton_mute->set_muted(mute);
+        ui->pushButton_mute->repaint();
+//        if (mute) ui->pushButton_mute->setStyleSheet("background-color: red;");
         //playing
         pause_ms = params["ms"].toLongLong();
         if (params["play"].toBool()) song_timer->start(pause_ms);
             break;
-        case kSignalEvent:
+     case kSignalEvent:
         qDebug("Setting up Event");
         //song_name
         song_name = params["song_name"].toString();
@@ -293,22 +287,25 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
 //        pause_ms = params["ms"].toLongLong();
         if (params["play"].toBool()) song_timer->start(pause_ms);
             break;
-        case kSignalVolume:
+     case kSignalVolume:
         vol = params["volume"].toLongLong();
         if (!sound_pressed) ui->horizontalSlider_sound->setValue(vol);
             break;
-        case kSignalTime:
+     case kSignalTime:
         t = params["time_change"].toInt();
+        qDebug() << "reading new time =" << t;
         time_value->setHMS(0,0,0,0);
         time_value->setHMS(0,time_value->addSecs(t).minute(), time_value->addSecs(t).second());
-        song_timer->stop();
-        song_timer->start(1000);
+        ui->lcdNumber_time->display(this->time_value->toString("mm:ss"));
+        ui->horizontalSlider_song->setValue(t);
+//        song_timer->stop();
+//        song_timer->start(1000);
             break;
-        case kSignalTree:
+     case kSignalTree:
         tree = params["data"].toString();
         load_tree_from_string(tree);
             break;
-        case kSignalStop:
+     case kSignalStop:
         //SET text to white
         //stop timers
         //set lcd to 0
@@ -361,7 +358,8 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
             break;
         case kSignalMute:
             //QPAINTEVENT
-
+            ui->pushButton_mute->set_muted(! ui->pushButton_mute->get_muted());
+            ui->pushButton_mute->repaint();
 
             break;
         default:

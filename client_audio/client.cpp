@@ -41,7 +41,7 @@ void client::serverMessageLoop()
         }
         QString str=QString(in.device()->readLine());
         if(str=="") continue; // Evitons les lignes vides.
-//        qDebug() << qPrintable(str);
+        qDebug() << qPrintable(str);
         QByteArray a=str.toUtf8();
         QJsonParseError error;
         QJsonDocument jDoc=QJsonDocument::fromJson(a, &error);
