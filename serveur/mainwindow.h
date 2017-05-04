@@ -38,14 +38,17 @@ private:
 signals:
     void signal_on();
     void change_song(QString);
+    //To server
     void signalUI(signalType, QVariantMap);
+    //To machine
     void signalSave(signalType, QVariantMap);
 
 public slots:
+    void message(signalType, QVariantMap);
     void closeEvent(QCloseEvent*);
     void send_pressed();
 
-
+    void find_path(QString, QVariantMap);
     void search_file();
     void search_list();
     void load_tree_from_file();

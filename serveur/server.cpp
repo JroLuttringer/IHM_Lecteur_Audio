@@ -25,14 +25,6 @@ server::server(QObject *parent) :
     qRegisterMetaType<signalType>("signalType");
 //    et on démarre la boucle
 
-    QString serverName(SERVER_NAME);
-    QLocalServer::removeServer(serverName);
-    if (!m_server->listen(serverName)) {
-//    gestion d’erreur...;
-    return;
-    }
-    connect(m_server, SIGNAL(newConnection()), this, SLOT(connectionFromClient()));
-    qDebug() << "eof creator" << socket_list.size();
 
 
 }
@@ -165,11 +157,24 @@ void server::clientMessageLoop()
 
 void server::ui_on()
 {
-    qDebug("ui says to turn on");
+    QVariantMap p;
+    emit signalFromServer(kSignalSetup, p);
+    qDebug("Turning ON Server... Waiting for Clients...");
+
+
+    QString serverName(SERVER_NAME);
+    QLocalServer::removeServer(serverName);
+    if (!m_server->listen(serverName)) {
+//    gestion d’erreur...;
+    return;
+    }
+    connect(m_server, SIGNAL(newConnection()), this, SLOT(connectionFromClient()));
+    qDebug() << "eof creator" << socket_list.size();
+
 }
 
 void server::message(signalType sig, QVariantMap params) {
-//    qDebug() << "Server got message from machine with code " << (sig);
+    qDebug() << "Server got message from machine with code " << (sig);
     QVariantMap p;
     QJsonObject jsonObject;
     QByteArray bytes;
@@ -285,15 +290,18 @@ void server::message(signalType sig, QVariantMap params) {
 //       save_preferences();
       break;
   case kSignalSetup:
-      qDebug() << "In setup with song: " << params["song_name"].toString();
-//      params["signal"] = kSignalSetup;
-      load_file_mpv( params["song_name"].toString() ); // = song_name;
+      qDebug() << "asking ui for path";
+        emit signalToUI(kSignalPath, params);
+      break;
+  case kSignalPath:
+      load_file_mpv( params["file_path"].toString() );
+      QThread::msleep(200);
       mute_mpv( params["muted"].toBool() ); //= muted;
       if (! params["playing"].toBool() )
-          pause_mpv();
+          emit signalFromServer(kSignalPause, p);
       set_time_mpv( params["time-pos"].toInt() );
-//      params["duration"] = song_duration;
       break;
+
   default:
       break;
   }
@@ -336,31 +344,6 @@ void server::send_tree_from_file()
     file.close();
 }
 
-//void server::save_preferences()
-//{
-//    QFile file("./preferences.txt");
-//    qDebug("Opened prefs to save prefs" );
-//    file.open(QIODevice::WriteOnly | QIODevice::Text);
-//    QTextStream out(&file);
-//    //Save preferences
-//    //Song_name
-//    out << song_name << "\n";
-//    //muted
-//    out << muted<< "\n";
-//    //playing
-//    out << playing<< "\n";
-//    //volume
-//    out << volume<< "\n";
-//    //time-pos
-//    out << song_time<< "\n";
-//    //duration
-//    out << song_duration<< "\n";
-//    file.close();
-//    qDebug() << "dont have time";
-//}
-
-//fonction vers mpv
-
 
 void server::load_file_mpv(QString file_name)
 {
@@ -370,7 +353,7 @@ void server::load_file_mpv(QString file_name)
     qDebug() << "loadfile mpv : " << file_name;
     QJsonObject jsonObject;
     QJsonArray request;
-    qDebug() << file_name;
+//    qDebug() << file_name;
     request << "loadfile" << file_name;
     jsonObject.insert("command",request);
     QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
@@ -380,19 +363,11 @@ void server::load_file_mpv(QString file_name)
     }
     QVariantMap params;
     emit signalFromServer(kSignalPlay, params);
-//    QThread::msleep(100);
-//    get_file_name();
-//    get_duration();
-//    get_volume();
-//    get_time();
-//    QThread::msleep(1000);
-//    params["song_name"] = song_name;
-//    params["duration"] = song_duration;
-//    qDebug() << "in kSigSong sending dur=" << song_duration << " and name = " << song_name;
-//    emit signalFromServer(kSignalInfo, params);
+
 }
 
 void server::set_time_mpv(int t){
+    qDebug() << "setting time to =" << t;
     // Je crée des objets JSON pour préparer la requete
     QJsonObject jsonObject;
     QJsonArray request;
@@ -410,6 +385,7 @@ void server::set_time_mpv(int t){
 }
 
 void server::pause_mpv(){
+    qDebug() << "pausing mpv";
     // Je crée des objets JSON pour préparer la requete
     QJsonObject jsonObject;
     QJsonArray request;
@@ -461,6 +437,7 @@ void server::stop_mpv(){
 }
 
 void server::mute_mpv(bool mute_value){
+    qDebug() << "setting mpv mute" << mute_value;
     // Je crée des objets JSON pour préparer la requete
     QJsonObject jsonObject;
     QJsonArray request;
@@ -657,7 +634,7 @@ void server::MPV_messageLoop(){
                 case 4:
                 song_time = std::max(0.0,jsonObject["data"].toDouble());
                 qDebug() << "Song_time demandée : " << song_time;
-                if (next)
+                if (next && !startup)
                 {
                     QVariantMap p;
                     p["song_name"] = song_name;
@@ -666,8 +643,10 @@ void server::MPV_messageLoop(){
                     emit signalFromServer(kSignalTime, p);
                     emit signalFromServer(kSignalInfo, p);
                     next = false;
+                    startup = false;
                     qDebug() << "sent time and info = " << song_time;
                 }
+                startup = false;
                     break;
                 default:
                     break;

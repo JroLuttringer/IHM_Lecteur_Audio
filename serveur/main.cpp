@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     QObject::connect(&w, SIGNAL(signalSave(signalType, QVariantMap)), &m, SLOT(message(signalType, QVariantMap)));
     QObject::connect(&m, SIGNAL(signalMachine(signalType, QVariantMap)), &s, SLOT(message(signalType, QVariantMap)));
     QObject::connect(&s, SIGNAL(signalFromServer(signalType,QVariantMap)), &m, SLOT(message(signalType, QVariantMap)));
+    QObject::connect(&s, SIGNAL(signalToUI(signalType,QVariantMap)), &w, SLOT(message(signalType, QVariantMap)));
 
 
     return a.exec();

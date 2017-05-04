@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    topLevel = new QTreeWidgetItem();
 //    topLevel->setText(0, "This is top level");
 //    ui->treeWidget->addTopLevelItem(topLevel);
+
     connect(ui->pushButton_file, SIGNAL(pressed()), this, SLOT(search_file()));
     connect(ui->pushButton_list, SIGNAL(pressed()), this, SLOT(search_list()));
     connect(ui->pushButton_save, SIGNAL(pressed()), this, SLOT(save_tree_to_file()));
@@ -31,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::send_pressed()
 {
+    ui->radioButton->setChecked(true);
     emit signal_on();
 }
 
@@ -139,7 +141,7 @@ void MainWindow::search_list()
 
 void MainWindow::load_children_from_file(QTextStream* in, QTreeWidgetItem* parent)
 {
-              QTreeWidgetItem *item = new QTreeWidgetItem();
+    QTreeWidgetItem *item = new QTreeWidgetItem();
     while (!in->atEnd())
        {
           QString line = in->readLine();
@@ -186,6 +188,9 @@ void MainWindow::load_tree_from_file()
           ui->treeWidget->addTopLevelItem(item);
        }
        file.close();
+
+
+
 }
 
 void MainWindow::save_tree_to_file()
@@ -220,6 +225,36 @@ QStringList MainWindow::visitTree(QTreeWidget *tree)
         visitTree(list, tree->topLevelItem(i));
     return list;
 }
+
+void MainWindow::find_path(QString name, QVariantMap p)
+{
+    QString test;
+    QList<QTreeWidgetItem*> clist = ui->treeWidget->findItems(name, Qt::MatchContains|Qt::MatchRecursive);
+    foreach(QTreeWidgetItem* item, clist)
+    {
+        if(item->childCount() == 0 && item->parent() )
+        {
+            test = item->parent()->text(0) +"/"+item->text(0);
+            qDebug() << test;
+//               emit change_song(test) ;
+        }
+    }
+//    QVariantMap p;
+    p["file_path"] = test;
+    emit signalUI(kSignalPath, p);
+}
+
+void MainWindow::message(signalType sig, QVariantMap params)
+{
+    if (sig == kSignalPath)
+    {
+        qDebug() << "Server asked UI for a path";
+        QString name = params["song_name"].toString();
+        find_path(name, params);
+    }
+}
+
+
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {

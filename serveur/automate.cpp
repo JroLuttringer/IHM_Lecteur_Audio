@@ -36,7 +36,6 @@ automate::automate(QObject *parent) : QObject(parent)
 
 
     setupMessages();
-    load_preferences();
 }
 
 void automate::setupMessages()
@@ -65,12 +64,12 @@ void automate::setupMessages()
         songTimer->stop();
         QVariantMap p;
         emit signalMachine(kSignalPause, p);
-        if (startup)
-        {
-            startup = false;
-            emit signalMachine(kSignalStartup, p);
+//        if (startup)
+//        {
+//            startup = false;
+//            emit signalMachine(kSignalStartup, p);
 
-        }
+//        }
     });
     QObject::connect(stop, &QState::entered, [this]()
     {
@@ -87,6 +86,7 @@ void automate::setupMessages()
     });
     machine->setInitialState(pause);
     machine->start();
+//    load_preferences();
 //    startup_info();
 }
 
@@ -186,6 +186,10 @@ void automate::message(signalType sig, QVariantMap params) {
       break;
   case kSignalSave:
       save_preferences();
+      break;
+  case kSignalSetup:
+      qDebug() << "asking for setup ";
+      load_preferences();
       break;
   default:
 
@@ -322,16 +326,16 @@ void automate::load_preferences()
     }
     file.close();
     QVariantMap params;
-    params["signal"] = kSignalSetup;
     params["song_name"] = song_name;
     params["muted"] = muted;
     params["playing"] = playing;
     params["time-pos"] = t;
     params["duration"] = song_duration;
-    if (song_name != "0")
+    if (song_name != "")
     {
         qDebug() << "sending setup message" << song_name;
         emit signalMachine(kSignalSetup, params);
+        qDebug() << "sent setup message";
     }
     qDebug() << "finished loading prefs";
 }

@@ -15,19 +15,25 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QRadioButton" name="radioButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>120</y>
+      <x>550</x>
+      <y>40</y>
       <width>31</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="checkable">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="butto_serv">
