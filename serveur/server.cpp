@@ -83,7 +83,7 @@ void server::clientMessageLoop()
         if (in.atEnd()){ // Rien dans la file d'attente
             c = (c+1) % (socket_list.size());
             m_client = socket_list.at(c);
-//            QThread::msleep(100); // On attend 1/10s et on continue
+            QThread::msleep(50); // On attend 1/10s et on continue
         continue;
         }
         QString str = QString(in.device()->readLine());
@@ -322,16 +322,6 @@ void server::send_tree_from_file()
 }
 
 
-
-
-
-
-
-
-
-
-
-
 //fonction vers mpv
 
 
@@ -381,7 +371,6 @@ void server::set_time_mpv(int t){
         m_mpv->flush();
     }
 }
-
 
 void server::pause_mpv(){
     // Je crée des objets JSON pour préparer la requete
@@ -676,6 +665,7 @@ void server::send_startup()
 
 server::~server()
 {
+//    save_preference();
     m_running=false;
     m_serverLoopThread.waitForFinished();
 }

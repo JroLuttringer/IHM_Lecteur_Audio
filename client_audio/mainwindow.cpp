@@ -123,14 +123,6 @@ void MainWindow::sl_pause()
     QVariantMap params;
     emit signalToClient(kSignalPause, params);
 }
-//void MainWindow::sl_volume(int vol)
-//{
-//    QVariantMap params;
-//    params.insert("volume", vol);
-//    emit signalToClient(kSignalVolume, params);
-//    qDebug("in sl_volume");
-//}
-
 void MainWindow::sl_stop()
 {
     QVariantMap p;
@@ -231,7 +223,7 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
     switch(sig)
     {
         case kSignalPlay:
-        pause_ms = params["pause_ms"].toInt() - 100;
+        pause_ms = params["pause_ms"].toInt();
         song_timer->start(pause_ms);
             break;
         case kSignalPause:
@@ -249,7 +241,7 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         time_duration->setHMS(0,time_duration->addSecs(duration).minute(),time_duration->addSecs(duration).second());
         ui->lcdNumber_length->display(time_duration->toString("mm:ss"));
         //time
-        t = params["time"].toLongLong();
+        t = params["time"].toInt();
         ui->horizontalSlider_song->setValue(t);
         time_value->setHMS(0,0,0,0);
         time_value->setHMS( 0,time_value->addSecs(t).minute(),this->time_value->addSecs(t).second());
@@ -260,7 +252,9 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         if (!sound_pressed) ui->horizontalSlider_sound->setValue(vol);
         //mute
         mute = params["mute"].toBool();
-        if (mute) ui->pushButton_mute->setStyleSheet("background-color: red;");
+        ui->pushButton_mute->set_muted(mute);
+        ui->pushButton_mute->repaint();
+//        if (mute) ui->pushButton_mute->setStyleSheet("background-color: red;");
         //playing
         pause_ms = params["ms"].toLongLong();
         if (params["play"].toBool()) song_timer->start(pause_ms);
@@ -361,7 +355,8 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
             break;
         case kSignalMute:
             //QPAINTEVENT
-
+            ui->pushButton_mute->set_muted(! ui->pushButton_mute->get_muted());
+            ui->pushButton_mute->repaint();
 
             break;
         default:
