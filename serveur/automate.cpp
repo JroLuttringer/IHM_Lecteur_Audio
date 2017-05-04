@@ -36,6 +36,7 @@ automate::automate(QObject *parent) : QObject(parent)
 
 
     setupMessages();
+    load_preferences();
 }
 
 void automate::setupMessages()
@@ -297,6 +298,41 @@ void automate::save_preferences()
     out << song_duration<< "\n";
     file.close();
     qDebug() << "dont have time";
+}
+
+void automate::load_preferences()
+{
+    QFile file("./preferences.txt");
+    int t;
+    qDebug("Opened prefs to load prefs" );
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream in(&file);
+    while(!in.atEnd())
+    {
+        qDebug() << "reading";
+        song_name = in.readLine();
+        if (song_name == "0") continue;
+        muted = in.readLine().toInt();
+        playing = in.readLine().toInt();
+        volume = in.readLine().toInt();
+        t = in.readLine().toInt();
+        song_time->setHMS(0,song_time->addSecs(t).minute(), song_time->addSecs(t).second());
+        song_duration = in.readLine().toInt();
+    }
+    file.close();
+    QVariantMap params;
+    params["signal"] = kSignalSetup;
+    params["song_name"] = song_name;
+    params["muted"] = muted;
+    params["playing"] = playing;
+    params["time-pos"] = t;
+    params["duration"] = song_duration;
+    if (song_name != "0")
+    {
+        qDebug() << "sending setup message";
+        emit signalMachine(kSignalSetup, params);
+    }
+    qDebug() << "finished loading prefs";
 }
 
 

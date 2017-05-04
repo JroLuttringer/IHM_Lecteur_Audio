@@ -284,6 +284,16 @@ void server::message(signalType sig, QVariantMap params) {
   case kSignalSave:
 //       save_preferences();
       break;
+  case kSignalSetup:
+      qDebug() << "In setup with song: " << params["song_name"].toString();
+//      params["signal"] = kSignalSetup;
+      load_file_mpv( params["song_name"].toString() ); // = song_name;
+      mute_mpv( params["muted"].toBool() ); //= muted;
+      if (! params["playing"].toBool() )
+          pause_mpv();
+      set_time_mpv( params["time-pos"].toInt() );
+//      params["duration"] = song_duration;
+      break;
   default:
       break;
   }

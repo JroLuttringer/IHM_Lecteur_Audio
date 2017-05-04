@@ -36,7 +36,8 @@ enum signalType {
     kSignalMute,
     kSignalEvent,
     kSignalQuit,
-    kSignalSave
+    kSignalSave,
+    kSignalSetup
 };
 
 class automate : public QObject
@@ -96,6 +97,7 @@ private slots:
     void increase_time();
 
     void save_preferences();
+    void load_preferences();
 //    void setStop();
 //    void setMute();
 
