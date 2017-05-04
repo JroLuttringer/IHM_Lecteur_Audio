@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->horizontalSlider_sound, SIGNAL(sliderPressed()), this, SLOT(slider_sound_pressed()));
     connect(ui->horizontalSlider_sound, SIGNAL(sliderReleased()), this, SLOT(slider_sound_released()));
     //mute
-    connect(ui->pushButton_mute, SIGNAL(pressed()), this, SLOT(sl_mute()));
+    connect(ui->pushButton_mute, SIGNAL(mute()), this, SLOT(sl_mute()));
 
     //musicbar
     // is set when gets initial info

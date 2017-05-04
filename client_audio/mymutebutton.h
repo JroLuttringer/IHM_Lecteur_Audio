@@ -26,7 +26,7 @@ private:
     QString not_muted_path= ":/new/prefix1/resource/unmute_3.svg";
     bool press;
 signals:
-    void pressed();
+    void mute();
 };
 
 #endif // MYMUTEBUTTON_H
