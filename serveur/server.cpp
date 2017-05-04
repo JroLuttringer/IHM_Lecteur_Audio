@@ -246,12 +246,14 @@ void server::message(signalType sig, QVariantMap params) {
       break;
   case kSignalFast:
       set_speed(2);
+      params["signal"]=kSignalFast;
       jsonObject = jsonObject.fromVariantMap(params);
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
       send_bytes_to_clients(bytes);
       break;
   case kSignalEndFast:
       set_speed(1);
+      params["signal"]=kSignalEndFast;
       jsonObject = jsonObject.fromVariantMap(params);
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
       send_bytes_to_clients(bytes);

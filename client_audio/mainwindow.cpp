@@ -24,6 +24,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //Create socket
     //Connect to server
     //Receive info from server
+    ui->lineEdit->setText("Centered Text");
+    ui->lineEdit->setAlignment(Qt::AlignHCenter);
+    ui->centralWidget->setStyleSheet("background-color: #776452;");
+    ui->frame->setStyleSheet("background-color: #a68c72;");
+    ui->verticalFrame_right->setStyleSheet("background-color: #a68c72;");
+    ui->treeWidget->setStyleSheet("background-color: white;");
+    ui->frame_info->setStyleSheet("background-color: #d6b493; border: 1px solid gray;");
+    ui->lineEdit->setStyleSheet("background-color: white; font-size: 30px;");
+    ui->frame_song->setStyleSheet("background-color: #bea083;");
+    ui->frame_sound->setStyleSheet("background-color: #bea083;");
 
 
     //Connect buttons
@@ -37,7 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //stop
     connect(ui->pushButton_stop, SIGNAL(pressed()), this, SLOT(sl_stop()));
     //next
-    connect(ui->pushButton_next, SIGNAL(pressed()), this, SLOT(sl_next()));
+    connect(ui->pushButton_next, SIGNAL(clicked()), this, SLOT(sl_next()));
+    connect(ui->pushButton_next, SIGNAL(pressed()), this, SLOT(sl_ff()));
+    connect(ui->pushButton_next, SIGNAL(released()), this, SLOT(sl_endff()));
     //back
     connect(ui->pushButton_back, SIGNAL(pressed()), this, SLOT(sl_back()));
 
@@ -138,6 +150,7 @@ void MainWindow::sl_next()
 
 void MainWindow::sl_ff()
 {
+
     QVariantMap p;
     emit signalToClient(kSignalFast, p);
     //send socket next
@@ -337,7 +350,7 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
             break;
         case kSignalFastBack:
         //????
-        //second = 500;
+//        second = 500;
         //pause_ms = (1000-pause_ms)/2;
         //play_direction = false ??
             break;
