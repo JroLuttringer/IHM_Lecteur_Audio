@@ -281,6 +281,9 @@ void server::message(signalType sig, QVariantMap params) {
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
       send_bytes_to_clients(bytes);
       break;
+  case kSignalSave:
+//       save_preferences();
+      break;
   default:
       break;
   }
@@ -323,6 +326,28 @@ void server::send_tree_from_file()
     file.close();
 }
 
+//void server::save_preferences()
+//{
+//    QFile file("./preferences.txt");
+//    qDebug("Opened prefs to save prefs" );
+//    file.open(QIODevice::WriteOnly | QIODevice::Text);
+//    QTextStream out(&file);
+//    //Save preferences
+//    //Song_name
+//    out << song_name << "\n";
+//    //muted
+//    out << muted<< "\n";
+//    //playing
+//    out << playing<< "\n";
+//    //volume
+//    out << volume<< "\n";
+//    //time-pos
+//    out << song_time<< "\n";
+//    //duration
+//    out << song_duration<< "\n";
+//    file.close();
+//    qDebug() << "dont have time";
+//}
 
 //fonction vers mpv
 

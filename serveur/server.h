@@ -19,11 +19,6 @@ public:
     void clientMessageLoop2();
     void MPV_messageLoop();
 
-
-    QList<QLocalSocket*> socket_list;
-    QLocalSocket *m_test1 = NULL;
-    QLocalSocket *m_test2 = NULL;
-private:
     int song_duration;
     QString song_name;
     bool muted;
@@ -31,6 +26,13 @@ private:
     bool startup;
     int volume;
     int song_time;
+
+
+    QList<QLocalSocket*> socket_list;
+    QLocalSocket *m_test1 = NULL;
+    QLocalSocket *m_test2 = NULL;
+private:
+
 
 
     QLocalServer *m_server;
@@ -77,6 +79,7 @@ public slots:
     void load_file_mpv(QString);
 
     void send_tree_from_file();
+//    void save_preferences();
 
     void send_bytes_to_clients(QByteArray bytes);
 };

@@ -2,6 +2,7 @@
 #define AUTOMATE_H
 
 #include <QObject>
+#include <QFile>
 #include <QStateMachine>
 #include <QState>
 #include <QHistoryState>
@@ -34,7 +35,8 @@ enum signalType {
     kSignalLang,
     kSignalMute,
     kSignalEvent,
-    kSignalQuit
+    kSignalQuit,
+    kSignalSave
 };
 
 class automate : public QObject
@@ -92,6 +94,8 @@ private slots:
     void setVolume(int);
     void startup_info();
     void increase_time();
+
+    void save_preferences();
 //    void setStop();
 //    void setMute();
 

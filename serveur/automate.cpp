@@ -183,6 +183,9 @@ void automate::message(signalType sig, QVariantMap params) {
       params["muted"]=muted;
       emit signalMachine(kSignalMute, params);
       break;
+  case kSignalSave:
+      save_preferences();
+      break;
   default:
 
       break;
@@ -272,7 +275,29 @@ void automate::startup_info()
     emit signalMachine(kSignalStartup, params);
 }
 
-
+void automate::save_preferences()
+{
+    QFile file("./preferences.txt");
+    qDebug("Opened prefs to save prefs" );
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    //Save preferences
+    //Song_name
+    out << song_name << "\n";
+    //muted
+    out << muted<< "\n";
+    //playing
+    out << playing<< "\n";
+    //volume
+    out << volume<< "\n";
+    //time-pos
+    int t = song_time->second() + song_time->minute()*60;
+    out << t<< "\n";
+    //duration
+    out << song_duration<< "\n";
+    file.close();
+    qDebug() << "dont have time";
+}
 
 
 
