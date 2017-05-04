@@ -1,3 +1,10 @@
+/*
+ * Copyright Cyrille MULLER Jean-Romain LUTTRINGER
+ * UFR de Mathématiques et d'Informatique
+ * Université de Strasbourg
+ * © 2017
+ */
+
 #include "automate.h"
 
 automate::automate(QObject *parent) : QObject(parent)

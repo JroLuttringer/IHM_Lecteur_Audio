@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Create socket
     //Connect to server
     //Receive info from server
-    ui->lineEdit->setText("Centered Text");
+    ui->lineEdit->setText("Server is not ON");
     ui->lineEdit->setAlignment(Qt::AlignHCenter);
     ui->centralWidget->setStyleSheet("background-color: #776452;");
     ui->frame->setStyleSheet("background-color: #a68c72;");
