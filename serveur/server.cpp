@@ -83,7 +83,7 @@ void server::clientMessageLoop()
         if (in.atEnd()){ // Rien dans la file d'attente
             c = (c+1) % (socket_list.size());
             m_client = socket_list.at(c);
-            QThread::msleep(100); // On attend 1/10s et on continue
+//            QThread::msleep(100); // On attend 1/10s et on continue
         continue;
         }
         QString str = QString(in.device()->readLine());
@@ -124,14 +124,19 @@ void server::clientMessageLoop()
             case kSignalTree:
                 break;
             case kSignalStop:
+            emit signalFromServer(kSignalStop, params);
                 break;
             case kSignalNext:
+            emit signalFromServer(kSignalNext, params);
                 break;
             case kSignalFast:
+            emit signalFromServer(kSignalFast, params);
                 break;
             case kSignalEndFast:
+            emit signalFromServer(kSignalEndFast, params);
                 break;
             case kSignalBack:
+            emit signalFromServer(kSignalBack, params);
                 break;
             case kSignalFastBack:
                 break;
@@ -146,6 +151,7 @@ void server::clientMessageLoop()
             case kSignalLang:
                 break;
             case kSignalMute:
+            emit signalFromServer(kSignalMute, jsonObject.toVariantMap());
                 break;
         case kSignalQuit:
             qDebug() << "client sent quit message";
@@ -213,24 +219,46 @@ void server::message(signalType sig, QVariantMap params) {
         set_time_mpv(t);
         jsonObject = jsonObject.fromVariantMap(params);
         bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
-
+        send_bytes_to_clients(bytes);
       break;
   case kSignalTree:
       send_tree_from_file();
       break;
   case kSignalStop:
+      pause_mpv();
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalNext:
+      next_mpv();
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalFast:
+      set_speed(2);
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalEndFast:
+      set_speed(1);
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalBack:
+      back_mpv();
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalFastBack:
+//      set_speed(2);
       break;
   case kSignalEndFastBack:
+//      set_speed(2);
       break;
   case kSignalSong:
         load_file_mpv(params["song_name"].toString());
@@ -246,6 +274,10 @@ void server::message(signalType sig, QVariantMap params) {
   case kSignalLang:
       break;
   case kSignalMute:
+      mute_mpv(params["muted"].toBool());
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   default:
       break;
@@ -308,7 +340,7 @@ void server::load_file_mpv(QString file_name)
 
 //    'ytdl-format' << 'bestvideo+bestaudio/best';
 
-
+    qDebug() << "loadfile mpv : " << file_name;
     QJsonObject jsonObject;
     QJsonArray request;
     qDebug() << file_name;
@@ -375,6 +407,91 @@ void server::play_mpv(){
 
     // Je crée une requete de la forme " command :["set_property","pause",false]
     request << "set_property" << "pause" << false;
+    jsonObject.insert("command",request);
+    qDebug() << "sending play to PMV";
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+    if (m_mpv != NULL) {
+        m_mpv->write(bytes.data(), bytes.length());
+        m_mpv->flush();
+    }
+}
+
+void server::stop_mpv(){
+    // Je crée des objets JSON pour préparer la requete
+    QJsonObject jsonObject;
+    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",false]
+    request << "stop";
+    jsonObject.insert("command",request);
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+    if (m_mpv != NULL) {
+        m_mpv->write(bytes.data(), bytes.length());
+        m_mpv->flush();
+    }
+}
+
+void server::mute_mpv(bool mute_value){
+    // Je crée des objets JSON pour préparer la requete
+    QJsonObject jsonObject;
+    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",false]
+    request << "set_property" << "mute" << mute_value;
+    jsonObject.insert("command",request);
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+    if (m_mpv != NULL) {
+        m_mpv->write(bytes.data(), bytes.length());
+        m_mpv->flush();
+    }
+}
+
+void server::next_mpv(){
+    // Je crée des objets JSON pour préparer la requete
+    QJsonObject jsonObject;
+    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",true]
+    request << "playlist-next";
+    jsonObject.insert("command",request);
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+    if (m_mpv != NULL) {
+        m_mpv->write(bytes.data(), bytes.length());
+        m_mpv->flush();
+    }
+}
+
+void server::back_mpv(){
+    // Je crée des objets JSON pour préparer la requete
+    QJsonObject jsonObject;
+    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",true]
+    request << "playlist-prev";
+    jsonObject.insert("command",request);
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+    if (m_mpv != NULL) {
+        m_mpv->write(bytes.data(), bytes.length());
+        m_mpv->flush();
+    }
+}
+
+void server::set_speed(float speed){
+    // Je crée des objets JSON pour préparer la requete
+    QJsonObject jsonObject;
+    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",true]
+    request << "set_property" << "speed" << speed;
     jsonObject.insert("command",request);
 
     // Je l'envoie sur la socket
@@ -486,7 +603,7 @@ void server::MPV_messageLoop(){
         }
         QString str = QString(in.device()->readLine());
         if(str == "") continue;
-//        qDebug() << "From MPV : " << str;
+        qDebug() << "From MPV : " << str;
         QByteArray a = str.toUtf8();
         QJsonParseError error;
         QJsonDocument jDoc = QJsonDocument::fromJson(a,&error);
@@ -512,7 +629,7 @@ void server::MPV_messageLoop(){
                     break;
 
                 case 4:
-                song_time = jsonObject["data"].toDouble();
+                song_time = std::max(0.0,jsonObject["data"].toDouble());
                 qDebug() << "Song_time demandée : " << song_time;
                 if (next)
                 {
@@ -523,6 +640,7 @@ void server::MPV_messageLoop(){
                     emit signalFromServer(kSignalTime, p);
                     emit signalFromServer(kSignalInfo, p);
                     next = false;
+                    qDebug() << "sent time and info = " << song_time;
                 }
                     break;
                 default:

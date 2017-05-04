@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString program = "mpv";
     QStringList arguments;
 
-    arguments << "--idle" << "--quiet"
+    arguments << "--idle" << "--quiet" << "--keep-open=yes" << "--keep-open=always"
               << "--input-ipc-server=/tmp/mpvsocket" << "--log-file=/home/cyrille/testlog"
               << "--ytdl-format=bestvideo+bestaudio/best";
     myProcess = new QProcess(this);

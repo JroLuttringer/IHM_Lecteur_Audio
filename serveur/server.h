@@ -59,6 +59,16 @@ public slots:
     void set_time_mpv(int);
     void pause_mpv();
     void play_mpv();
+    void stop_mpv();
+
+    void mute_mpv(bool);
+
+    void next_mpv();
+    void back_mpv();
+    void set_speed(float);
+
+
+
     void get_file_name();
     void get_duration();
     void get_volume();
