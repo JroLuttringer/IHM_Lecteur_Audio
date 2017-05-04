@@ -95,6 +95,7 @@ public slots:
     void sl_lang_fra();
     void sl_lang_eng();
     void sl_lang_ger();
+    void sl_lang_pirate();
 
     void sl_song(QTreeWidgetItem *, int);
 //    void sl_set_sound();

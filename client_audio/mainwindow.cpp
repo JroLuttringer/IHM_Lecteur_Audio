@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_french, SIGNAL(pressed()), this, SLOT(sl_lang_fra()));
     connect(ui->pushButton_english, SIGNAL(pressed()), this, SLOT(sl_lang_eng()));
     connect(ui->pushButton_german, SIGNAL(pressed()), this, SLOT(sl_lang_ger()));
+    connect(ui->pushButton_pirate, SIGNAL(pressed()),this,SLOT(sl_lang_pirate()));
 
 connect(ui->treeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(sl_song(QTreeWidgetItem *, int)));
 }
@@ -193,6 +194,12 @@ void MainWindow::sl_lang_eng()
     QVariantMap p;
     p["lang"]="eng";
     emit signalToClient(kSignalLang, p);
+}
+
+void MainWindow::sl_lang_pirate(){
+    QVariantMap p;
+    p["lang"] = "pir";
+    emit signalToClient(kSignalLang,p);
 }
 
 void MainWindow::sl_song(QTreeWidgetItem *item, int col)
@@ -345,17 +352,35 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
             break;
         case kSignalList:
             break;
-        case kSignalLang:
-        // QString language = params["lang];
-//        if (language == "fra")
-//        {
-            //SET TITLE
-            //SET Tree NAME?
-//        }
-        // eng || ger
-
-
+        case kSignalLang:{
+            QString language = params["lang"].toString();
+            if(language == "fra"){
+                ui->pushButton_english->setText("ANG");
+                ui->pushButton_german->setText("ALL");
+                ui->pushButton_french->setText("FRA");
+                ui->pushButton_pirate->setText("PIR");
+                this->setWindowTitle("Lecteur Audio");
+            } else if (language == "eng"){
+                ui->pushButton_english->setText("ENG");
+                ui->pushButton_german->setText("GER");
+                ui->pushButton_french->setText("FRE");
+                ui->pushButton_pirate->setText("PIR");
+                this->setWindowTitle("Audio Player");
+            } else if (language == "ger"){
+                ui->pushButton_english->setText("ENG");
+                ui->pushButton_german->setText("DEU");
+                ui->pushButton_french->setText("FRA");
+                ui->pushButton_pirate->setText("PIR");
+                this->setWindowTitle("Audio-Player");
+            } else if (language == "pir"){
+                ui->pushButton_english->setText("ARRR");
+                ui->pushButton_german->setText("ARRRRR");
+                ui->pushButton_french->setText("ARRR");
+                ui->pushButton_pirate->setText("PIR");
+                this->setWindowTitle("ARRRRRRRRRRRRRRR");
+            }
             break;
+        }
         case kSignalMute:
             //QPAINTEVENT
             ui->pushButton_mute->set_muted(! ui->pushButton_mute->get_muted());
