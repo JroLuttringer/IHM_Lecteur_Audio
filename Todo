@@ -1,14 +1,24 @@
+
+//FACILE
+
 [ ] - Finir l'impl des boutons NEXT BACK etc (basiques)
 [ ] - Finir l'impl de langues
-[ ] - Finir l'impl de l'avance rapide (et recul rapide?)
 [ ] - Faire le paintEvent lorsqu'on reçoit MUTE
 [ ] - Implementer le bouton qui allume ou éteint le serveur
 [ ] - Sauvegarder l'état du serveur (song time-pos volume mute play/pause)
-[ ] - Implementer TAGlib (pour un truc histoire de l'avoir)
-[ ] - Faire un mini rapport explicatif
 [ ] - Implementer le renvoi de l'arbre lors d'ajout de fichier/dossiers
-[ ] - MetaData Radios
-
-[ ] - Verifier la portabilitée du build et faire une version finale
 [ ] - Nom des fichiers en dur
+
+
+//Moins FACILE
+[ ] - Implementer TAGlib (pour un truc histoire de l'avoir)
+[ ] - Finir l'impl de l'avance rapide (et recul rapide?)
+
+
+//FIN
+[ ] - Verifier la portabilitée du build et faire une version finale
+[ ] - Faire un mini rapport explicatif
+
+//BONUS
 [ ] - Listes = Listes arbitraire de fichiers (Compliqué)
+[ ] - MetaData Radios
