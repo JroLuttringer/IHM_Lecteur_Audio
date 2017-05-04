@@ -46,6 +46,11 @@ void client::serverMessageLoop()
         QJsonParseError error;
         QJsonDocument jDoc=QJsonDocument::fromJson(a, &error);
         QJsonObject jsonObject=jDoc.object();
+        if (!jsonObject.contains("signal"))
+        {
+            qDebug() << "empty signal, this is a disconnect";
+            continue;
+        }
         switch(jsonObject["signal"].toInt())
         {
             case kSignalPlay:
