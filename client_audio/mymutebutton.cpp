@@ -19,11 +19,12 @@ void MyMuteButton::paintEvent(QPaintEvent *e){
     painter.setRenderHint(QPainter::Antialiasing);
 
     QPainterPath path;
-    path.addRoundedRect(QRectF(0, 0, this->width(),this->height()), 2, 2);
+    path.addRoundedRect(QRectF(0, 0, this->width(),this->height()), 4, 4);
     QLinearGradient gradient(QPoint(0,0),QPoint(0,this->height()));
-    gradient.setColorAt(0, Qt::white);
-    gradient.setColorAt(1,QColor(230,230,230,255));//Qt::lightGray);
-    painter.fillRect(QRect(QPoint(0,0),QPoint(this->width(),this->height())),gradient);
+    gradient.setColorAt(0, QColor(142,120,98,255));
+    gradient.setColorAt(1,QColor(142,120,98,255));//Qt::lightGray);
+//    painter.fillRect(QRect(QPoint(0,0),QPoint(this->width(),this->height())),gradient);
+    painter.fillPath(path, gradient);
     QPen pen(Qt::gray, 2);
     painter.setPen(pen);
     if(muted)
@@ -32,12 +33,11 @@ void MyMuteButton::paintEvent(QPaintEvent *e){
         painter.drawPixmap(7,5,this->width()-10,this->height()-8,*pixmap_not_mute);
     if(press){
         painter.setOpacity(0.5);
-          painter.fillPath(path,Qt::lightGray);
+          painter.fillPath(path,Qt::black);
 
     }
     painter.setOpacity(1);
     painter.drawPath(path);
-
 }
 
 void MyMuteButton::mousePressEvent(QMouseEvent *event){
