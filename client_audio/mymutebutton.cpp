@@ -1,15 +1,18 @@
+/*
+ * Copyright Cyrille MULLER Jean-Romain LUTTRINGER
+ * UFR de Mathématiques et d'Informatique
+ * Université de Strasbourg
+ * © 2017
+ */
+
 #include "mymutebutton.h"
-#include <QDebug>
-#include <QLinearGradient>
-#include <QPoint>
+
 MyMuteButton::MyMuteButton(QWidget *parent):QWidget(parent){
     this->pixmap_mute = new QPixmap(this->muted_path);
-    pixmap_mute->scaled(38,44,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
     this->pixmap_not_mute = new QPixmap(this->not_muted_path);
-     pixmap_not_mute->scaled(38,44,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
-    this->muted =true;
-    this->resize(50,50);
+    this->muted = true;
+
     press = false;
 }
 
@@ -26,9 +29,9 @@ void MyMuteButton::paintEvent(QPaintEvent *e){
     QPen pen(Qt::gray, 2);
     painter.setPen(pen);
     if(muted)
-        painter.drawPixmap(7,7,this->width()-12,this->height()-14,*pixmap_mute);
+        painter.drawPixmap(7,5,this->width()-10,this->height()-8,*pixmap_mute);
     else
-        painter.drawPixmap(7,7,this->width()-12,this->height()-14,*pixmap_not_mute);
+        painter.drawPixmap(7,5,this->width()-10,this->height()-8,*pixmap_not_mute);
     if(press){
         painter.setOpacity(0.5);
           painter.fillPath(path,Qt::lightGray);

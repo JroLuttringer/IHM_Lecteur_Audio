@@ -1,3 +1,10 @@
+/*
+ * Copyright Cyrille MULLER Jean-Romain LUTTRINGER
+ * UFR de Mathématiques et d'Informatique
+ * Université de Strasbourg
+ * © 2017
+ */
+
 #ifndef MYMUTEBUTTON_H
 #define MYMUTEBUTTON_H
 
