@@ -44,6 +44,7 @@ public:
     explicit automate(QObject *parent = 0);
     bool startup;
     bool muted;
+    bool stopped;
     bool playing;
     int volume = 100;
     int song_duration = 0;
@@ -56,6 +57,7 @@ private:
     QStateMachine *machine;
     QState *play;
     QState *pause;
+    QState *stop;
 
 //    QState *stop;
 
@@ -76,14 +78,17 @@ signals:
     // Internal
     void signalPause();
     void signalPlay();
+    void signalStop();
 
 private slots:
     //messages internes, fonctions à appeler lors de reception de messages du serveur par ex.
     //complementaire des fonctions private
     void setPlay();
     void send_info();
+    void send_stop_info();
     void send_event();
     void setPause();
+    void setStop();
     void setVolume(int);
     void startup_info();
     void increase_time();
