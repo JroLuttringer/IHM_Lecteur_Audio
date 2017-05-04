@@ -131,14 +131,15 @@ void automate::message(signalType sig, QVariantMap params) {
       break;
   case kSignalTime:
       qDebug() << "machine received time sig";
+
         t = params["time_change"].toInt();
         qDebug() << "time = " << t;
         song_time->setHMS(0, 0, 0, 0);
         if (t)
         song_time->setHMS(0,song_time->addSecs(t).minute(), song_time->addSecs(t).second());
-        qDebug() << "cant setHMS if t = " << t;
-        songTimer->stop();
-        songTimer->start(1000);
+//        qDebug() << "cant setHMS if t = " << t;
+//        songTimer->stop();
+//        songTimer->start(1000);
         qDebug() << "received kSigTime with t_c = " << t;
         emit signalMachine(kSignalTime, params);
       break;

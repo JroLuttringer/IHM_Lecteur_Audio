@@ -216,7 +216,9 @@ void server::message(signalType sig, QVariantMap params) {
       break;
   case kSignalTime:
         t = params["time_change"].toInt();
+        params["signal"] = kSignalTime;
         set_time_mpv(t);
+        qDebug() << "setting time to " << t;
         jsonObject = jsonObject.fromVariantMap(params);
         bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
         send_bytes_to_clients(bytes);

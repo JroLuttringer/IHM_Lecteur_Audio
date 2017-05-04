@@ -222,14 +222,14 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
     QString song_name;
     switch(sig)
     {
-        case kSignalPlay:
+     case kSignalPlay:
         pause_ms = params["pause_ms"].toInt();
         song_timer->start(pause_ms);
             break;
-        case kSignalPause:
+     case kSignalPause:
         song_timer->stop();
             break;
-        case kSignalInfo:
+     case kSignalInfo:
         qDebug("Setting up UI");
         //song_name
         song_name = params["song_name"].toString();
@@ -259,7 +259,7 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
         pause_ms = params["ms"].toLongLong();
         if (params["play"].toBool()) song_timer->start(pause_ms);
             break;
-        case kSignalEvent:
+     case kSignalEvent:
         qDebug("Setting up Event");
         //song_name
         song_name = params["song_name"].toString();
@@ -287,22 +287,25 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
 //        pause_ms = params["ms"].toLongLong();
         if (params["play"].toBool()) song_timer->start(pause_ms);
             break;
-        case kSignalVolume:
+     case kSignalVolume:
         vol = params["volume"].toLongLong();
         if (!sound_pressed) ui->horizontalSlider_sound->setValue(vol);
             break;
-        case kSignalTime:
+     case kSignalTime:
         t = params["time_change"].toInt();
+        qDebug() << "reading new time =" << t;
         time_value->setHMS(0,0,0,0);
         time_value->setHMS(0,time_value->addSecs(t).minute(), time_value->addSecs(t).second());
-        song_timer->stop();
-        song_timer->start(1000);
+        ui->lcdNumber_time->display(this->time_value->toString("mm:ss"));
+        ui->horizontalSlider_song->setValue(t);
+//        song_timer->stop();
+//        song_timer->start(1000);
             break;
-        case kSignalTree:
+     case kSignalTree:
         tree = params["data"].toString();
         load_tree_from_string(tree);
             break;
-        case kSignalStop:
+     case kSignalStop:
         //SET text to white
         //stop timers
         //set lcd to 0
