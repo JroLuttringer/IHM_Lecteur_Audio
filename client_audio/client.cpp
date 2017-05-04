@@ -297,7 +297,7 @@ void client::messageFromUI(signalType sig, QVariantMap params) {
       break;
   case kSignalLang:
       jsonObject["signal"] = kSignalLang;
-      jsonObject["lang"] = params["lang"];
+      jsonObject["lang"] = params["lang"].toString();
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
       if (m_socket != NULL) {
           m_socket->write(bytes.data(), bytes.length());

@@ -182,7 +182,7 @@ void MainWindow::sl_mute()
 {
     QVariantMap p;
     emit signalToClient(kSignalMute, p);
-//    QPaintEvent
+//    QPaintEvent se fait à la reception
 }
 void MainWindow::sl_lang_fra()
 {
@@ -319,23 +319,50 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
             break;
         case kSignalFast:
         //We're going twice as fast
-
+        second = 500;
+        pause_ms/=2;
             break;
         case kSignalEndFast:
+        second = 1000;
+        pause_ms *= 2;
+        
             break;
         case kSignalBack:
+        //receive info
+        //this will reset timer to 0
             break;
         case kSignalFastBack:
+        //????
+        //second = 500;
+        //pause_ms = (1000-pause_ms)/2;
+        //play_direction = false ??
             break;
         case kSignalEndFastBack:
+        //????
+        //second = 1000;
+        //pause_ms = (500-pause_ms)*2;
+        //play_direction = true ??
             break;
         case kSignalSong:
+            //INfo
             break;
         case kSignalList:
             break;
         case kSignalLang:
+        // QString language = params["lang];
+//        if (language == "fra")
+//        {
+            //SET TITLE
+            //SET Tree NAME?
+//        }
+        // eng || ger
+
+
             break;
         case kSignalMute:
+            //QPAINTEVENT
+
+
             break;
         default:
             qDebug() << "not yet implemented";
