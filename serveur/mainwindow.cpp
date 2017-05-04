@@ -166,7 +166,7 @@ void MainWindow::load_children_from_file(QTextStream* in, QTreeWidgetItem* paren
 
 void MainWindow::load_tree_from_file()
 {
-    QFile file("./save.txt");
+    QFile file(SAVE_FILE);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&file);
     QTreeWidgetItem *item = new QTreeWidgetItem();
@@ -198,7 +198,7 @@ void MainWindow::save_tree_to_file()
     QStringList result = visitTree(ui->treeWidget);
     qDebug() << result;
 
-    QFile file("./save.txt");
+    QFile file(SAVE_FILE);
     qDebug("1" );
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
