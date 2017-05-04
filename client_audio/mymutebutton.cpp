@@ -4,7 +4,9 @@
 #include <QPoint>
 MyMuteButton::MyMuteButton(QWidget *parent):QWidget(parent){
     this->pixmap_mute = new QPixmap(this->muted_path);
+    pixmap_mute->scaled(38,44,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
     this->pixmap_not_mute = new QPixmap(this->not_muted_path);
+     pixmap_not_mute->scaled(38,44,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 
     this->muted =true;
     this->resize(50,50);
@@ -13,7 +15,8 @@ MyMuteButton::MyMuteButton(QWidget *parent):QWidget(parent){
 
 void MyMuteButton::paintEvent(QPaintEvent *e){
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing,QPainter::SmoothPixmapTransform);
+    painter.setRenderHint(QPainter::Antialiasing);
+
     QPainterPath path;
     path.addRoundedRect(QRectF(0, 0, this->width(),this->height()), 2, 2);
     QLinearGradient gradient(QPoint(0,0),QPoint(0,this->height()));
@@ -25,7 +28,7 @@ void MyMuteButton::paintEvent(QPaintEvent *e){
     if(muted)
         painter.drawPixmap(7,7,this->width()-12,this->height()-14,*pixmap_mute);
     else
-        painter.drawPixmap(11,15,this->width()-20,this->height()-30,*pixmap_not_mute);
+        painter.drawPixmap(7,7,this->width()-12,this->height()-14,*pixmap_not_mute);
     if(press){
         painter.setOpacity(0.5);
           painter.fillPath(path,Qt::lightGray);

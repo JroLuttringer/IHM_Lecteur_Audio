@@ -22,8 +22,8 @@ private:
     QPixmap* pixmap_mute;
     QPixmap* pixmap_not_mute;
     bool muted ;
-    QString muted_path = ":/new/prefix1/resource/mute_2.png";
-    QString not_muted_path= ":/new/prefix1/resource/sound_high.png";
+    QString muted_path = ":/new/prefix1/resource/mute_3.png";
+    QString not_muted_path= ":/new/prefix1/resource/unmute_3.svg";
     bool press;
 signals:
     void pressed();
