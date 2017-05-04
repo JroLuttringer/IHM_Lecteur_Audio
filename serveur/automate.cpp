@@ -311,7 +311,8 @@ void automate::load_preferences()
     {
         qDebug() << "reading";
         song_name = in.readLine();
-        if (song_name == "0") continue;
+
+        if (song_name == "0") break;
         muted = in.readLine().toInt();
         playing = in.readLine().toInt();
         volume = in.readLine().toInt();
@@ -329,7 +330,7 @@ void automate::load_preferences()
     params["duration"] = song_duration;
     if (song_name != "0")
     {
-        qDebug() << "sending setup message";
+        qDebug() << "sending setup message" << song_name;
         emit signalMachine(kSignalSetup, params);
     }
     qDebug() << "finished loading prefs";
