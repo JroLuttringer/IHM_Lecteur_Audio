@@ -141,6 +141,7 @@ void server::clientMessageLoop()
             case kSignalList:
                 break;
             case kSignalLang:
+            emit signalFromServer(kSignalLang, jsonObject.toVariantMap());
                 break;
             case kSignalMute:
             emit signalFromServer(kSignalMute, jsonObject.toVariantMap());
@@ -279,6 +280,9 @@ void server::message(signalType sig, QVariantMap params) {
   case kSignalList:
       break;
   case kSignalLang:
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalMute:
       mute_mpv(params["muted"].toBool());

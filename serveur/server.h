@@ -26,6 +26,7 @@ public:
     bool startup;
     int volume;
     int song_time;
+    QString language;
 
 
     QList<QLocalSocket*> socket_list;

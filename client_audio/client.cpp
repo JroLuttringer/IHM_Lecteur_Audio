@@ -102,6 +102,7 @@ void client::serverMessageLoop()
             case kSignalList:
                 break;
             case kSignalLang:
+            emit signalFromClient(kSignalLang, jsonObject.toVariantMap());
                 break;
             case kSignalMute:
             emit signalFromClient(kSignalMute, jsonObject.toVariantMap());

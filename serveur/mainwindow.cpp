@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    topLevel->setText(0, "This is top level");
 //    ui->treeWidget->addTopLevelItem(topLevel);
 
+    connect(ui->pushButton_radio, SIGNAL(pressed()), this, SLOT(add_radio()));
     connect(ui->pushButton_file, SIGNAL(pressed()), this, SLOT(search_file()));
     connect(ui->pushButton_list, SIGNAL(pressed()), this, SLOT(search_list()));
     connect(ui->pushButton_save, SIGNAL(pressed()), this, SLOT(save_tree_to_file()));
@@ -34,6 +35,20 @@ void MainWindow::send_pressed()
 {
     ui->radioButton->setChecked(true);
     emit signal_on();
+}
+
+void MainWindow::add_radio()
+{
+    bool ok;
+    QString text = QInputDialog::getText(0, "Radio URL",
+                                         "Enter the url of a radio:", QLineEdit::Normal,
+                                         "", &ok);
+    QTreeWidgetItem *item = new QTreeWidgetItem();
+    item->setText(0, text);
+    ui->treeWidget->addTopLevelItem(item);
+    QVariantMap p;
+    emit signalUI(kSignalTree, p);
+    save_tree_to_file();
 }
 
 

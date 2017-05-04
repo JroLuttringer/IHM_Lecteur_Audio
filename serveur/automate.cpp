@@ -191,6 +191,10 @@ void automate::message(signalType sig, QVariantMap params) {
       qDebug() << "asking for setup ";
       load_preferences();
       break;
+  case kSignalLang:
+        language = params["lang"].toString();
+      emit signalMachine(kSignalLang, params);
+      break;
   default:
 
       break;

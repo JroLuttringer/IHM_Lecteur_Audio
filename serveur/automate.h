@@ -52,6 +52,7 @@ public:
     bool playing;
     int volume = 100;
     int song_duration = 0;
+    QString language;
     QString song_name;
     int pause_ms;
 

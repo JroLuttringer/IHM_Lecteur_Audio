@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QDebug>
 #include <QTreeWidgetItem>
 #include <QDir>
@@ -51,6 +52,7 @@ public slots:
     void send_pressed();
 
     void find_path(QString, QVariantMap);
+    void add_radio();
     void search_file();
     void search_list();
     void load_tree_from_file();
