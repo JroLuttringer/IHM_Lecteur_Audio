@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QCloseEvent>
+#include <QMessageBox>
 #include "server.h"
 #include "automate.h"
 

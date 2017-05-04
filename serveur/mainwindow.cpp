@@ -235,8 +235,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     delete myProcess;
     myProcess = NULL;
     }
-
-
+    if (QMessageBox::Yes == QMessageBox::question(this, "Close Confirmation", "Exit?", QMessageBox::Yes | QMessageBox::No))
+    {
+        event->accept();
+    }
     delete ui;
 }
 
