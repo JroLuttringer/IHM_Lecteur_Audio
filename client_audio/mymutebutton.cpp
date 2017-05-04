@@ -37,15 +37,18 @@ void MyMuteButton::paintEvent(QPaintEvent *e){
 }
 
 void MyMuteButton::mousePressEvent(QMouseEvent *event){
-    press = true;
-    this->repaint();
+//    press = true;
+//    this->repaint();
+    emit pressed();
+    //darken background
 }
 
 void MyMuteButton::mouseReleaseEvent(QMouseEvent *event){
-    press = false;
-    this->muted = !this->muted;
-    this->repaint();
-    emit pressed();
+//    press = false;
+//    this->muted = !this->muted;
+//    this->repaint();
+//    emit releaseMouse();
+    //normalize backgrund
 }
 
 void MyMuteButton::set_muted(bool b){
