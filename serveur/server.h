@@ -51,6 +51,7 @@ private:
 signals:
     void signalFromServer(signalType, QVariantMap);
     void signalToUI(signalType, QVariantMap);
+    void signalTOME(signalType, QVariantMap);
 //    La boucle de réception tournera dans une tâche concurrente :
 
 public slots:

@@ -38,7 +38,9 @@ enum signalType {
     kSignalQuit,
     kSignalSave,
     kSignalSetup,
-    kSignalPath
+    kSignalPath,
+    kSignalInfoMPV,
+    kSignalSendStartup
 };
 
 class automate : public QObject

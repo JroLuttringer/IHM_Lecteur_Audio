@@ -307,6 +307,16 @@ void server::message(signalType sig, QVariantMap params) {
           emit signalFromServer(kSignalPause, p);
       set_time_mpv( params["time-pos"].toInt() );
       break;
+  case kSignalInfoMPV:
+      get_file_name();
+      get_duration();
+      get_volume();
+      QThread::msleep(100);
+      get_time();
+      break;
+  case kSignalSendStartup:
+      send_startup();
+      break;
 
   default:
       break;
@@ -326,7 +336,6 @@ void server::send_bytes_to_clients(QByteArray bytes)
         }
     }
 }
-
 
 void server::send_tree_from_file()
 {
@@ -349,7 +358,6 @@ void server::send_tree_from_file()
     send_bytes_to_clients(bytes);
     file.close();
 }
-
 
 void server::load_file_mpv(QString file_name)
 {
@@ -612,7 +620,8 @@ void server::MPV_messageLoop(){
         }
         QString str = QString(in.device()->readLine());
         if(str == "") continue;
-        qDebug() << "From MPV : " << str;
+//        qDebug() << "From MPV : " << str;
+        QVariantMap p;
         QByteArray a = str.toUtf8();
         QJsonParseError error;
         QJsonDocument jDoc = QJsonDocument::fromJson(a,&error);
@@ -624,13 +633,14 @@ void server::MPV_messageLoop(){
             {
                 case 1:
                 song_name = jsonObject["data"].toString();
-                send_startup();
+                emit signalTOME(kSignalSendStartup, p);
                 qDebug() << "Song_name demandée : " << song_name;
                     break;
                 case 2:
                 song_duration = jsonObject["data"].toDouble();
                 qDebug() << "Song_duration demandée : " << song_duration;
-                send_startup();
+                emit signalTOME(kSignalSendStartup, p);
+//                send_startup();
                     break;
                 case 3:
                 volume = jsonObject["data"].toDouble();
@@ -658,18 +668,14 @@ void server::MPV_messageLoop(){
                     break;
             }
         }
-        if (jsonObject["event"] == "start-file")
-        {
-//                send_startup();
-//                qDebug() <<" sending startup ";
-        }
         if (jsonObject["event"] == "tracks-changed")
         {
-            get_file_name();
-            get_duration();
-            get_volume();
-            QThread::msleep(100);
-            get_time();
+            emit signalTOME(kSignalInfoMPV, p);
+//            get_file_name();
+//            get_duration();
+//            get_volume();
+//            QThread::msleep(100);
+//            get_time();
             next = true;
         }
     }

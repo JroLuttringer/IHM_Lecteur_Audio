@@ -89,7 +89,7 @@ void MainWindow::search_file()
 
 void MainWindow::add_directory(QDir *dir, QTreeWidgetItem *parent)
 {
-    QStringList file_children = dir->entryList(QStringList() << "*.mp3" << "*.m4a",QDir::Files);
+    QStringList file_children = dir->entryList(QStringList() << "*.mp3" << "*.m4a" << "*.wma" << "*.wav" << "*.ogg" << "*.riff" << "*.bwf",QDir::Files);
     for (int i=0; i<file_children.size(); i++)
     {
         QTreeWidgetItem * child = new QTreeWidgetItem();

@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->verticalFrame_right->setStyleSheet("background-color: #a68c72;");
     ui->treeWidget->setStyleSheet("background-color: white;");
     ui->frame_info->setStyleSheet("background-color: #d6b493; border: 1px solid gray;");
-    ui->lineEdit->setStyleSheet("background-color: white; font-size: 30px;");
+    ui->lineEdit->setStyleSheet("background-color: white; font-size: 20px;");
     ui->frame_song->setStyleSheet("background-color: #bea083;");
     ui->frame_sound->setStyleSheet("background-color: #bea083;");
 
