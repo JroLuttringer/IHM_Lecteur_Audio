@@ -23,8 +23,6 @@ public:
     QList<QLocalSocket*> socket_list;
     QLocalSocket *m_test1 = NULL;
     QLocalSocket *m_test2 = NULL;
-    QLocalSocket *m_test3 = NULL;
-    QLocalSocket *m_test4 = NULL;
 private:
     int song_duration;
     QString song_name;
@@ -37,7 +35,6 @@ private:
 
     QLocalServer *m_server;
     QLocalSocket *m_client;
-    QLocalSocket *m_client2;
     QLocalSocket *m_mpv=NULL;
     bool m_running;
     bool m_running2;
@@ -45,7 +42,6 @@ private:
     bool m_running4;
 
     QFuture<void> m_serverLoopThread;
-    QFuture<void> m_serverLoopThread2;
     bool m_running_mpv;
     QFuture<void> m_MPV_messageLoopThread;
 
@@ -71,6 +67,8 @@ public slots:
     void load_file_mpv(QString);
 
     void send_tree_from_file();
+
+    void send_bytes_to_clients(QByteArray bytes);
 };
 
 #endif // SERVER_H

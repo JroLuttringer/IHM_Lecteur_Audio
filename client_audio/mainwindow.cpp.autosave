@@ -319,9 +319,11 @@ void MainWindow::messageFromClient(signalType sig, QVariantMap params)
             break;
         case kSignalFast:
         //We're going twice as fast
-
+        second = 500;
+        pause_ms/=2;
             break;
         case kSignalEndFast:
+        
             break;
         case kSignalBack:
             break;

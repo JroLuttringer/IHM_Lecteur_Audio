@@ -39,6 +39,7 @@ public:
     QHBoxLayout *horizontalLayout;
     QPushButton *pushButton_file;
     QPushButton *pushButton_list;
+    QPushButton *pushButton;
     QPushButton *pushButton_save;
     QPushButton *pushButton_reset;
     QMenuBar *menuBar;
@@ -85,6 +86,11 @@ public:
 
         horizontalLayout->addWidget(pushButton_list);
 
+        pushButton = new QPushButton(layoutWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+
+        horizontalLayout->addWidget(pushButton);
+
         pushButton_save = new QPushButton(layoutWidget);
         pushButton_save->setObjectName(QStringLiteral("pushButton_save"));
 
@@ -124,6 +130,7 @@ public:
         ___qtreewidgetitem->setText(0, QApplication::translate("MainWindow", "Media", Q_NULLPTR));
         pushButton_file->setText(QApplication::translate("MainWindow", "Add File", Q_NULLPTR));
         pushButton_list->setText(QApplication::translate("MainWindow", "Add List", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("MainWindow", "Add Radio", Q_NULLPTR));
         pushButton_save->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
         pushButton_reset->setText(QApplication::translate("MainWindow", "Reset", Q_NULLPTR));
     } // retranslateUi

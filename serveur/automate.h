@@ -20,7 +20,20 @@ enum signalType {
     kSignalVolume,
     kSignalInfo,
     kSignalStartup,
-    kSignalTime
+    kSignalTime,
+    kSignalTree,
+    kSignalStop,
+    kSignalNext,
+    kSignalFast,
+    kSignalEndFast,
+    kSignalBack,
+    kSignalFastBack,
+    kSignalEndFastBack,
+    kSignalSong,
+    kSignalList,
+    kSignalLang,
+    kSignalMute,
+    kSignalEvent
 };
 
 class automate : public QObject
@@ -31,8 +44,8 @@ public:
     bool startup;
     bool muted;
     bool playing;
-    int volume;
-    int song_duration;
+    int volume = 100;
+    int song_duration = 0;
     QString song_name;
     int pause_ms;
 
@@ -68,6 +81,7 @@ private slots:
     //complementaire des fonctions private
     void setPlay();
     void send_info();
+    void send_event();
     void setPause();
     void setVolume(int);
     void startup_info();

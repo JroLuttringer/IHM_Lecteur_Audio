@@ -8,12 +8,6 @@ server::server(QObject *parent) :
     // Je crée la socket
     startup = true;
     m_mpv = new QLocalSocket(this);
-
-//    m_test1 = new QLocalSocket(this);
-//    socket_list = new QList(QLocalSocket);
-
-    // Je connect la socket au server MPV
-    // ( j'ai lancé MPV avec cet argument )
     m_mpv->connectToServer("/tmp/mpvsocket");
 
     // J'attend d'être co
@@ -23,25 +17,13 @@ server::server(QObject *parent) :
         m_mpv->connectToServer("/tmp/mpvsocket");
 
     }
-    {
-        // si je suis pas co, j'affiche une erreur
-        get_file_name();
-        get_duration();
-        get_volume();
-        get_time();
-        qDebug("letsgo mpv");
-    }
 
     // on fait tourner la boucle de reception dans un thread
     this->m_MPV_messageLoopThread=QtConcurrent::run(this, &server::MPV_messageLoop);
     m_running_mpv =true;
 
-
-
-
     qRegisterMetaType<signalType>("signalType");
 //    et on démarre la boucle
-
 
     QString serverName(SERVER_NAME);
     QLocalServer::removeServer(serverName);
@@ -57,10 +39,9 @@ server::server(QObject *parent) :
 
 void server::connectionFromClient()
 {   qDebug() << "Connection from client" << socket_list.size();
-    if(socket_list.count() == 0)
+    if(socket_list.size() == 0)
     {
         m_running=true;
-
         m_test1 = m_server->nextPendingConnection();
         socket_list.append(m_test1);
         m_serverLoopThread=QtConcurrent::run(this, &server::clientMessageLoop);
@@ -68,29 +49,15 @@ void server::connectionFromClient()
             connect(m_test1, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
         return;
     }
-    else if(socket_list.count() == 1)
+    else if(socket_list.size() > 0)
     {
-        m_running2=true;
-
         m_test2 = m_server->nextPendingConnection();
         socket_list.append(m_test2);
-        m_serverLoopThread2=QtConcurrent::run(this, &server::clientMessageLoop2);
         connect(m_test2, SIGNAL(disconnected()), m_test2, SLOT(deleteLater()));
         connect(m_test2, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
         return;
     }
-    else if(socket_list.count() == 2)
-    {
-        socket_list.append(m_server->nextPendingConnection());
-        return;
-    }
-    else if(socket_list.count() == 3)
-    {
-        socket_list.append(m_server->nextPendingConnection());
-        return;
-    }
-    else qDebug() << "Too many clients";
-    qDebug() << "ça crash pas icic bouffon";
+    else qDebug() << "Error with new clients";
 }
 
 //Quand un client se déconnecte, on l’annule :
@@ -102,126 +69,86 @@ void server::clientDisconnected()
     socket_list.removeAt(pos);
     send = nullptr;
     if(!pos) m_running = false;
-    if(pos==1) m_running2 =false;
+//    if(pos==1) m_running2 =false;
 }
 
 
 void server::clientMessageLoop()
 {
-    m_client = socket_list.at(0);
-    while (m_running){
-    QDataStream in(m_client);
-    if (in.atEnd()){ // Rien dans la file d'attente
-    QThread::msleep(100); // On attend 1/10s et on continue
-    continue;
-    }
-    QString str = QString(in.device()->readLine());
-//    Et on traite ce flux qui est du JSON
-    QByteArray a = str.toUtf8();
-    QJsonParseError error;
-    QJsonDocument jDoc = QJsonDocument::fromJson(a,&error);
-    QJsonObject jsonObject=jDoc.object();
-    qDebug() << str;
-    if (jsonObject["signal"] == "play_client")
+    int c = 0;
+    m_client = socket_list.at(c);
+    while (m_running)
     {
-        qDebug("i received play from client, sending to automate");
+        QDataStream in(m_client);
+        if (in.atEnd()){ // Rien dans la file d'attente
+            c = (c+1) % (socket_list.size());
+            m_client = socket_list.at(c);
+    //        QThread::msleep(100); // On attend 1/10s et on continue
+        continue;
+        }
+        QString str = QString(in.device()->readLine());
+    //    Et on traite ce flux qui est du JSON
+        QByteArray a = str.toUtf8();
+        QJsonParseError error;
+        QJsonDocument jDoc = QJsonDocument::fromJson(a,&error);
+        QJsonObject jsonObject=jDoc.object();
+        qDebug() << str;
         QVariantMap params;
-        emit signalFromServer(kSignalPlay, params);
-    }
-    if (jsonObject["signal"] == "pause_client")
-    {
-        qDebug("i received pause from client, sending to automate");
-        QVariantMap params;
-        emit signalFromServer(kSignalPause, params);
-    }
-    if (jsonObject["signal"] == "get_info")
-    {
-        qDebug("i received get_info from client, sending to automate");
-        QVariantMap params;
-        emit signalFromServer(kSignalInfo, params);
-    }
-    if (jsonObject.contains("volume"))
-    {
-        QVariantMap params;
-        int volume = jsonObject["volume"].toVariant().toLongLong();
-        params.insert("volume", volume);
-        emit signalFromServer(kSignalVolume, params);
-//
-    }
-    if (jsonObject.contains("time_change"))
-    {
-        QVariantMap params;
-        int time_change = jsonObject["time_change"].toInt();
-        params.insert("time_change", time_change);
-        emit signalFromServer(kSignalTime, params);
-        qDebug() << "sending time change to machine with int : " << time_change;
-    }
-//    QByteArray a=str.toUtf8();
-//    QJsonParseError error;
-//    QJsonDocument jDoc=QJsonDocument::fromJson(a, &error);
-//    QJsonObject jsonObject=jDoc.object();
+        if (!jsonObject.contains("signal")) continue;
+        switch(jsonObject["signal"].toInt())
+        {
+            case kSignalPlay:
+            emit signalFromServer(kSignalPlay, params);
+                break;
+            case kSignalPause:
+            emit signalFromServer(kSignalPause, params);
+                break;
+            case kSignalInfo:
+            emit signalFromServer(kSignalInfo, params);
+                break;
+            case kSignalVolume:
+            params.insert("volume", jsonObject["volume"].toInt());
+            emit signalFromServer(kSignalVolume, params);
+                break;
+            case kSignalStartup:
+            emit signalFromServer(kSignalStartup, params);
+            break;
+            case kSignalTime:
+            params.insert("time_change", jsonObject["time_change"].toInt());
+            emit signalFromServer(kSignalTime, params);
+                break;
+            case kSignalTree:
+                break;
+            case kSignalStop:
+                break;
+            case kSignalNext:
+                break;
+            case kSignalFast:
+                break;
+            case kSignalEndFast:
+                break;
+            case kSignalBack:
+                break;
+            case kSignalFastBack:
+                break;
+            case kSignalEndFastBack:
+                break;
+            case kSignalSong:
+//                params.insert("song_change", jsonObject["song_name"].toString());
+                emit signalFromServer(kSignalSong, jsonObject.toVariantMap());
+                break;
+            case kSignalList:
+                break;
+            case kSignalLang:
+                break;
+            case kSignalMute:
+                break;
+            default:
+                qDebug() << "not yet implemented";
+            break;
+        }
     }
 }
-
-
-void server::clientMessageLoop2()
-{
-    m_client2 = socket_list.at(1);
-    while (m_running2){
-    QDataStream in(m_client2);
-    if (in.atEnd()){ // Rien dans la file d'attente
-    QThread::msleep(100); // On attend 1/10s et on continue
-    continue;
-    }
-    QString str = QString(in.device()->readLine());
-//    Et on traite ce flux qui est du JSON
-    QByteArray a = str.toUtf8();
-    QJsonParseError error;
-    QJsonDocument jDoc = QJsonDocument::fromJson(a,&error);
-    QJsonObject jsonObject=jDoc.object();
-    qDebug() << str;
-    if (jsonObject["signal"] == "play_client")
-    {
-        qDebug("i received play from client, sending to automate");
-        QVariantMap params;
-        emit signalFromServer(kSignalPlay, params);
-    }
-    if (jsonObject["signal"] == "pause_client")
-    {
-        qDebug("i received pause from client, sending to automate");
-        QVariantMap params;
-        emit signalFromServer(kSignalPause, params);
-    }
-    if (jsonObject["signal"] == "get_info")
-    {
-        qDebug("i received get_info from client, sending to automate");
-        QVariantMap params;
-        emit signalFromServer(kSignalInfo, params);
-    }
-    if (jsonObject.contains("volume"))
-    {
-        QVariantMap params;
-        int volume = jsonObject["volume"].toVariant().toLongLong();
-        params.insert("volume", volume);
-        emit signalFromServer(kSignalVolume, params);
-//
-    }
-    if (jsonObject.contains("time_change"))
-    {
-        QVariantMap params;
-        int time_change = jsonObject["time_change"].toInt();
-        params.insert("time_change", time_change);
-        emit signalFromServer(kSignalTime, params);
-        qDebug() << "sending time change to machine with int : " << time_change;
-    }
-//    QByteArray a=str.toUtf8();
-//    QJsonParseError error;
-//    QJsonDocument jDoc=QJsonDocument::fromJson(a, &error);
-//    QJsonObject jsonObject=jDoc.object();
-    }
-}
-
-
 
 void server::ui_on()
 {
@@ -229,7 +156,7 @@ void server::ui_on()
 }
 
 void server::message(signalType sig, QVariantMap params) {
-    qDebug() << "Server got message from machine with code " << (sig);
+//    qDebug() << "Server got message from machine with code " << (sig);
     QVariantMap p;
     QJsonObject jsonObject;
     QByteArray bytes;
@@ -237,77 +164,41 @@ void server::message(signalType sig, QVariantMap params) {
   switch(sig){
   case kSignalPlay:
       play_mpv();
-      jsonObject.insert("signal","play");
+      jsonObject.insert("signal",kSignalPlay);
       jsonObject.insert("pause_ms", params["pause_ms"].toInt());
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
-
       qDebug("le serveur a reçu play de l'automate, je dois envoyer play aux clients");
-      for(int i=0; i<socket_list.count(); i++)
-      {
-          if (socket_list.at(i) != NULL)
-          {
-              socket_list.at(i)->write(bytes.data(), bytes.length());
-              socket_list.at(i)->flush();
-          }
-      }
-      qDebug() << "where the fuck is it crashing play";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalPause:
       pause_mpv();
-      jsonObject.insert("signal","pause");
+      jsonObject.insert("signal",kSignalPause);
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
-
       qDebug("le serveur a reçu pause de l'automate, je dois envoyer pause aux clients");
-      for(int i=0; i<socket_list.count(); i++)
-      {
-          if (m_test1) m_test1 = socket_list.at(i);
-          if (m_test1 != NULL)
-          {
-              qDebug() << "not null";
-              m_test1->write(bytes.data(), bytes.length());
-              m_test1->flush();
-          }
-      }
-      qDebug() << "fin pause";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalVolume:
-
       volume = params["volume"].toLongLong();
-
       setVolume_mpv(volume);
-      jsonObject = jsonObject.fromVariantMap(params);
+      jsonObject.insert("signal", kSignalVolume);
+      jsonObject.insert("volume", volume);
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
-      for(int i=0; i<socket_list.count(); i++)
-      {
-          if (m_test1) m_test1 = socket_list.at(i);
-          if (m_test1 != NULL)
-          {
-              qDebug() << "not null";
-              m_test1->write(bytes.data(), bytes.length());
-              m_test1->flush();
-          }
-      }
+      send_bytes_to_clients(bytes);
       //tell clients the volume has changed
       break;
 
   case kSignalInfo:
-
           jsonObject = jsonObject.fromVariantMap(params);
           bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
-          for(int i=0; i<socket_list.count(); i++)
-          {
-              if (m_test1) m_test1 = socket_list.at(i);
-              if (m_test1 != NULL)
-              {
-                  qDebug() << "not null";
-                  m_test1->write(bytes.data(), bytes.length());
-                  m_test1->flush();
-              }
-          }
-          qDebug() << "sent info to all clients now sending trees";
-          send_tree_from_file();
+          send_bytes_to_clients(bytes);
+      break;
+  case kSignalEvent:
+      jsonObject = jsonObject.fromVariantMap(params);
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      send_bytes_to_clients(bytes);
       break;
   case kSignalStartup:
+      send_tree_from_file();
 
       break;
   case kSignalTime:
@@ -315,26 +206,62 @@ void server::message(signalType sig, QVariantMap params) {
         set_time_mpv(t);
         jsonObject = jsonObject.fromVariantMap(params);
         bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
-        for(int i=0; i<socket_list.count(); i++)
-        {
-            if (m_test1) m_test1 = socket_list.at(i);
-            if (m_test1 != NULL)
-            {
-                qDebug() << "not null";
-                m_test1->write(bytes.data(), bytes.length());
-                m_test1->flush();
-            }
-        }
-      break;
 
+      break;
+  case kSignalTree:
+      break;
+  case kSignalStop:
+      break;
+  case kSignalNext:
+      break;
+  case kSignalFast:
+      break;
+  case kSignalEndFast:
+      break;
+  case kSignalBack:
+      break;
+  case kSignalFastBack:
+      break;
+  case kSignalEndFastBack:
+      break;
+  case kSignalSong:
+        load_file_mpv(params["song_name"].toString());
+        //send info to client
+//        QThread::msleep(1000);
+////        p["song_name"] = song_name;
+////        p["duration"] = song_duration;
+////        qDebug() << "in kSigSong sending dur=" << song_duration << " and name = " << song_name;
+////        emit signalFromServer(kSignalInfo, p);
+      break;
+  case kSignalList:
+      break;
+  case kSignalLang:
+      break;
+  case kSignalMute:
+      break;
   default:
       break;
   }
 }
 
+void server::send_bytes_to_clients(QByteArray bytes)
+{
+    for(int i=0; i<socket_list.count(); i++)
+    {
+        if (m_test1) m_test1 = socket_list.at(i);
+        if (m_test1 != NULL)
+        {
+//            qDebug() << "not null";
+            m_test1->write(bytes.data(), bytes.length());
+            m_test1->flush();
+        }
+    }
+}
+
+
 void server::send_tree_from_file()
 {
-    QFile file("/home/cyrille/test/save.txt");
+    QFile file("./save.txt");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&file);
     QString line;
@@ -346,20 +273,11 @@ void server::send_tree_from_file()
 
     QJsonObject jsonObject;
     QByteArray bytes;
-    jsonObject.insert("signal","tree_init");
+    jsonObject.insert("signal",kSignalTree);
     jsonObject.insert("data", line);
     bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
 
-    for(int i=0; i<socket_list.count(); i++)
-    {
-        if (m_test1) m_test1 = socket_list.at(i);
-        if (m_test1 != NULL)
-        {
-            qDebug() << "not null";
-            m_test1->write(bytes.data(), bytes.length());
-            m_test1->flush();
-        }
-    }
+    send_bytes_to_clients(bytes);
     file.close();
 }
 
@@ -379,8 +297,13 @@ void server::send_tree_from_file()
 
 void server::load_file_mpv(QString file_name)
 {
+
+//    'ytdl-format' << 'bestvideo+bestaudio/best';
+
+
     QJsonObject jsonObject;
     QJsonArray request;
+    qDebug() << file_name;
     request << "loadfile" << file_name;
     jsonObject.insert("command",request);
     QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
@@ -388,6 +311,18 @@ void server::load_file_mpv(QString file_name)
         m_mpv->write(bytes.data(), bytes.length());
         m_mpv->flush();
     }
+    QVariantMap params;
+    emit signalFromServer(kSignalPlay, params);
+//    QThread::msleep(100);
+//    get_file_name();
+//    get_duration();
+//    get_volume();
+//    get_time();
+//    QThread::msleep(1000);
+//    params["song_name"] = song_name;
+//    params["duration"] = song_duration;
+//    qDebug() << "in kSigSong sending dur=" << song_duration << " and name = " << song_name;
+//    emit signalFromServer(kSignalInfo, params);
 }
 
 void server::set_time_mpv(int t){
@@ -533,6 +468,7 @@ void server::get_time(){
 
 // Boucle de reception
 void server::MPV_messageLoop(){
+    bool next = false;
     while(m_running_mpv){
         QDataStream in (m_mpv);
         if (in.atEnd()) { //rien dans la file
@@ -542,7 +478,7 @@ void server::MPV_messageLoop(){
         }
         QString str = QString(in.device()->readLine());
         if(str == "") continue;
-//        qDebug() << str;
+//        qDebug() << "From MPV : " << str;
         QByteArray a = str.toUtf8();
         QJsonParseError error;
         QJsonDocument jDoc = QJsonDocument::fromJson(a,&error);
@@ -554,11 +490,13 @@ void server::MPV_messageLoop(){
             {
                 case 1:
                 song_name = jsonObject["data"].toString();
+                send_startup();
                 qDebug() << "Song_name demandée : " << song_name;
                     break;
                 case 2:
                 song_duration = jsonObject["data"].toDouble();
                 qDebug() << "Song_duration demandée : " << song_duration;
+                send_startup();
                     break;
                 case 3:
                 volume = jsonObject["data"].toDouble();
@@ -568,29 +506,46 @@ void server::MPV_messageLoop(){
                 case 4:
                 song_time = jsonObject["data"].toDouble();
                 qDebug() << "Song_time demandée : " << song_time;
-                if (startup)
+                if (next)
                 {
-                    startup = false;
-                    send_startup();
+                    QVariantMap p;
+                    p["song_name"] = song_name;
+                    p["duration"] = song_duration;
+                    p["time_change"] = song_time;
+                    emit signalFromServer(kSignalTime, p);
+                    emit signalFromServer(kSignalInfo, p);
+                    next = false;
                 }
                     break;
                 default:
                     break;
             }
         }
-
-
+        if (jsonObject["event"] == "start-file")
+        {
+//                send_startup();
+//                qDebug() <<" sending startup ";
+        }
+        if (jsonObject["event"] == "tracks-changed")
+        {
+            get_file_name();
+            get_duration();
+            get_volume();
+            QThread::msleep(100);
+            get_time();
+            next = true;
+        }
     }
 }
 
 void server::send_startup()
 {
     QVariantMap p;
-    while (startup) QThread::usleep(100);
-    qDebug() << "Sending start signal song_dur = " << song_duration;
+//    while (startup) QThread::usleep(100);
+//    qDebug() << "Sending start signal song_dur = " << song_duration;
     p["song_name"] = song_name;
     p["duration"] = song_duration;
-    emit signalFromServer(kSignalStartup, p);
+    emit signalFromServer(kSignalEvent, p);
 }
 
 server::~server()

@@ -25,7 +25,7 @@ client::client(QObject *parent) : QObject(parent),
         qDebug()<<m_socket->errorString();
         m_socket->disconnectFromServer();
     }
-    sl_info();
+    sl_start();
 }
 
 
@@ -41,28 +41,96 @@ void client::serverMessageLoop()
         }
         QString str=QString(in.device()->readLine());
         if(str=="") continue; // Evitons les lignes vides.
-        qDebug() << qPrintable(str);
+//        qDebug() << qPrintable(str);
         QByteArray a=str.toUtf8();
         QJsonParseError error;
         QJsonDocument jDoc=QJsonDocument::fromJson(a, &error);
         QJsonObject jsonObject=jDoc.object();
-        if (jsonObject["signal"]== "info") emit signalFromClient(kSignalInfo, jsonObject.toVariantMap());
-        if (jsonObject["signal"]== "play") emit signalFromClient(kSignalPlay, jsonObject.toVariantMap());
-        if (jsonObject["signal"]== "pause") emit signalFromClient(kSignalPause, jsonObject.toVariantMap());
-        if (jsonObject["signal"]== "tree_init" && !setup)
+        switch(jsonObject["signal"].toInt())
         {
+            case kSignalPlay:
+            emit signalFromClient(kSignalPlay, jsonObject.toVariantMap());
+                break;
+            case kSignalPause:
+            emit signalFromClient(kSignalPause, jsonObject.toVariantMap());
+                break;
+            case kSignalInfo:
+            qDebug() << a;
+            emit signalFromClient(kSignalInfo, jsonObject.toVariantMap());
+                break;
+            case kSignalEvent:
+            qDebug() << a;
+            emit signalFromClient(kSignalEvent, jsonObject.toVariantMap());
+                break;
+            case kSignalVolume:
+            emit signalFromClient(kSignalVolume, jsonObject.toVariantMap());
+                break;
+            case kSignalTime:
+            emit signalFromClient(kSignalTime, jsonObject.toVariantMap());
+                break;
+            case kSignalTree:
             emit signalFromClient(kSignalTree, jsonObject.toVariantMap());
-            setup = true;
+                break;
+            case kSignalStop:
+            emit signalFromClient(kSignalStop, jsonObject.toVariantMap());
+                break;
+            case kSignalNext:
+            emit signalFromClient(kSignalNext, jsonObject.toVariantMap());
+                break;
+            case kSignalFast:
+            emit signalFromClient(kSignalFast, jsonObject.toVariantMap());
+                break;
+            case kSignalEndFast:
+            emit signalFromClient(kSignalEndFast, jsonObject.toVariantMap());
+                break;
+            case kSignalBack:
+            emit signalFromClient(kSignalBack, jsonObject.toVariantMap());
+                break;
+            case kSignalFastBack:
+            emit signalFromClient(kSignalFastBack, jsonObject.toVariantMap());
+                break;
+            case kSignalEndFastBack:
+            emit signalFromClient(kSignalEndFastBack, jsonObject.toVariantMap());
+                break;
+            case kSignalSong:
+                break;
+            case kSignalList:
+                break;
+            case kSignalLang:
+                break;
+            case kSignalMute:
+            emit signalFromClient(kSignalMute, jsonObject.toVariantMap());
+                break;
+            default:
+                qDebug() << "not yet implemented";
+            break;
         }
-        if (jsonObject.contains("time_change")) emit signalFromClient(kSignalTime, jsonObject.toVariantMap());
-
     }
 }
 
 void client::sl_info()
 {
     QJsonObject jsonObject;
-    jsonObject["signal"] ="get_info";
+    jsonObject["signal"] = kSignalInfo;
+
+    // Je l'envoie sur la socket
+    QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+
+    if (m_socket != NULL) {
+        m_socket->write(bytes.data(), bytes.length());
+        m_socket->flush();
+    }
+}
+
+void client::sl_start()
+{
+    //send socket play
+    QJsonObject jsonObject;
+//    QJsonArray request;
+
+    // Je crée une requete de la forme " command :["set_property","pause",false]
+//    request << "play_client";
+    jsonObject["signal"] = kSignalStartup;
 
     // Je l'envoie sur la socket
     QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
@@ -81,7 +149,7 @@ void client::sl_play()
 
     // Je crée une requete de la forme " command :["set_property","pause",false]
 //    request << "play_client";
-    jsonObject["signal"] ="play_client";
+    jsonObject["signal"] = kSignalPlay;
 
     // Je l'envoie sur la socket
     QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
@@ -99,7 +167,7 @@ void client::sl_pause()
 
     // Je crée une requete de la forme " command :["set_property","pause",false]
 //    request << "pause_client";
-    jsonObject["signal"] = "pause_client";
+    jsonObject["signal"] = kSignalPause;
 
     // Je l'envoie sur la socket
     QByteArray bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
@@ -113,6 +181,7 @@ void client::sl_pause()
 void client::sl_volume(int vol)
 {
     QJsonObject jsonObject;
+    jsonObject["signal"] = kSignalVolume;
     jsonObject["volume"] = vol;
 
     // Je l'envoie sur la socket
@@ -142,6 +211,7 @@ void client::messageFromUI(signalType sig, QVariantMap params) {
         sl_volume(vol);
       break;
   case kSignalTime:
+      jsonObject["signal"] = kSignalTime;
       jsonObject["time_change"] = params["time_change"].toInt();
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
 
@@ -150,7 +220,98 @@ void client::messageFromUI(signalType sig, QVariantMap params) {
           m_socket->flush();
       }
       break;
+  case kSignalSong:
+      jsonObject["signal"] = kSignalSong;
+      jsonObject["song_name"] = params["song_name"].toString();
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
 
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+//        QThread::sleep(1);
+//      sl_info();
+      break;
+  case kSignalQuit:
+         this->~client();
+  break;
+  case kSignalStop:
+      jsonObject["signal"] = kSignalStop;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+  case kSignalNext:
+      jsonObject["signal"] = kSignalNext;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+  case kSignalFast:
+      jsonObject["signal"] = kSignalFast;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+  case kSignalEndFast:
+      jsonObject["signal"] = kSignalEndFast;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+  case kSignalBack:
+      jsonObject["signal"] = kSignalBack;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+  case kSignalFastBack:
+      jsonObject["signal"] = kSignalFastBack;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+  case kSignalEndFastBack:
+      jsonObject["signal"] = kSignalEndFastBack;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+
+  case kSignalList:
+      //When you click on Dir instead of File
+      break;
+  case kSignalLang:
+      jsonObject["signal"] = kSignalLang;
+      jsonObject["lang"] = params["lang"];
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
+  case kSignalMute:
+      jsonObject["signal"] = kSignalMute;
+      bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
+      if (m_socket != NULL) {
+          m_socket->write(bytes.data(), bytes.length());
+          m_socket->flush();
+      }
+      break;
   default:
       break;
   }

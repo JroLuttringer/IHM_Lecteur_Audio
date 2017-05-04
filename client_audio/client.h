@@ -21,7 +21,20 @@ enum signalType
     kSignalInfo,
     kSignalStartup,
     kSignalTime,
-    kSignalTree
+    kSignalTree,
+    kSignalStop,
+    kSignalNext,
+    kSignalFast,
+    kSignalEndFast,
+    kSignalBack,
+    kSignalFastBack,
+    kSignalEndFastBack,
+    kSignalSong,
+    kSignalList,
+    kSignalLang,
+    kSignalMute,
+    kSignalEvent,
+    kSignalQuit
 };
 
 class client : public QObject
@@ -41,6 +54,7 @@ signals:
     void signalFromClient(signalType, QVariantMap);
 
 public slots:
+    void sl_start();
     void sl_play();
     void sl_pause();
     void sl_volume(int);

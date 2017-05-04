@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_client_t {
-    QByteArrayData data[9];
-    char stringdata0[85];
+    QByteArrayData data[10];
+    char stringdata0[94];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,16 +35,17 @@ QT_MOC_LITERAL(0, 0, 6), // "client"
 QT_MOC_LITERAL(1, 7, 16), // "signalFromClient"
 QT_MOC_LITERAL(2, 24, 0), // ""
 QT_MOC_LITERAL(3, 25, 10), // "signalType"
-QT_MOC_LITERAL(4, 36, 7), // "sl_play"
-QT_MOC_LITERAL(5, 44, 8), // "sl_pause"
-QT_MOC_LITERAL(6, 53, 9), // "sl_volume"
-QT_MOC_LITERAL(7, 63, 7), // "sl_info"
-QT_MOC_LITERAL(8, 71, 13) // "messageFromUI"
+QT_MOC_LITERAL(4, 36, 8), // "sl_start"
+QT_MOC_LITERAL(5, 45, 7), // "sl_play"
+QT_MOC_LITERAL(6, 53, 8), // "sl_pause"
+QT_MOC_LITERAL(7, 62, 9), // "sl_volume"
+QT_MOC_LITERAL(8, 72, 7), // "sl_info"
+QT_MOC_LITERAL(9, 80, 13) // "messageFromUI"
 
     },
     "client\0signalFromClient\0\0signalType\0"
-    "sl_play\0sl_pause\0sl_volume\0sl_info\0"
-    "messageFromUI"
+    "sl_start\0sl_play\0sl_pause\0sl_volume\0"
+    "sl_info\0messageFromUI"
 };
 #undef QT_MOC_LITERAL
 
@@ -54,7 +55,7 @@ static const uint qt_meta_data_client[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -62,19 +63,21 @@ static const uint qt_meta_data_client[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   44,    2, 0x06 /* Public */,
+       1,    2,   49,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    0,   49,    2, 0x0a /* Public */,
-       5,    0,   50,    2, 0x0a /* Public */,
-       6,    1,   51,    2, 0x0a /* Public */,
-       7,    0,   54,    2, 0x0a /* Public */,
-       8,    2,   55,    2, 0x0a /* Public */,
+       4,    0,   54,    2, 0x0a /* Public */,
+       5,    0,   55,    2, 0x0a /* Public */,
+       6,    0,   56,    2, 0x0a /* Public */,
+       7,    1,   57,    2, 0x0a /* Public */,
+       8,    0,   60,    2, 0x0a /* Public */,
+       9,    2,   61,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3, QMetaType::QVariantMap,    2,    2,
 
  // slots: parameters
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    2,
@@ -91,11 +94,12 @@ void client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->signalFromClient((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
-        case 1: _t->sl_play(); break;
-        case 2: _t->sl_pause(); break;
-        case 3: _t->sl_volume((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: _t->sl_info(); break;
-        case 5: _t->messageFromUI((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
+        case 1: _t->sl_start(); break;
+        case 2: _t->sl_play(); break;
+        case 3: _t->sl_pause(); break;
+        case 4: _t->sl_volume((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: _t->sl_info(); break;
+        case 6: _t->messageFromUI((*reinterpret_cast< signalType(*)>(_a[1])),(*reinterpret_cast< QVariantMap(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -136,13 +140,13 @@ int client::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 7)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

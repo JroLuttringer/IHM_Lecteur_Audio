@@ -75,6 +75,7 @@ void automate::increase_time()
     songTimer->start(1000);
     int s = song_time->second() + song_time->minute()*60;
     qDebug() << s;
+
 }
 
 void automate::message(signalType sig, QVariantMap params) {
@@ -95,12 +96,17 @@ void automate::message(signalType sig, QVariantMap params) {
       setVolume(vol);
       break;
   case kSignalInfo:
+      song_name = params["song_name"].toString();
+      song_duration = params["duration"].toInt();
+
         send_info();
       break;
   case kSignalStartup:
-        song_name = params["song_name"].toString();
-        song_duration = params["duration"].toInt();
+//      song_name = params["song_name"].toString();
+//      song_duration = params["duration"].toInt();
         qDebug() << "received kSigStart with s_d = " << song_duration;
+        send_info();
+        emit signalMachine(kSignalStartup, params);
       break;
   case kSignalTime:
         t = params["time_change"].toInt();
@@ -111,6 +117,19 @@ void automate::message(signalType sig, QVariantMap params) {
         qDebug() << "received kSigTime with t_c = " << t;
         emit signalMachine(kSignalTime, params);
       break;
+  case kSignalSong:
+      song_time->setHMS(0, 0, 0, 0);
+//      song_time->setHMS(0,song_time->addSecs(t).minute(), song_time->addSecs(t).second());
+      songTimer->stop();
+      songTimer->start(1000);
+      emit signalMachine(kSignalSong, params);
+        send_info();
+      break;
+  case kSignalEvent:
+      song_name = params["song_name"].toString();
+      song_duration = params["duration"].toInt();
+        send_event();
+      break;
   default:
 
       break;
@@ -119,7 +138,7 @@ void automate::message(signalType sig, QVariantMap params) {
 
 void automate::send_info(){
     QVariantMap jsonObject;
-    jsonObject.insert("signal","info");
+    jsonObject.insert("signal",kSignalInfo);
     jsonObject.insert("song_name",song_name);
     jsonObject.insert("duration",song_duration);
     int s = song_time->second() + song_time->minute()*60;
@@ -132,6 +151,17 @@ void automate::send_info(){
     jsonObject.insert("mute",muted);
     jsonObject.insert("play",playing);
     emit signalMachine(kSignalInfo, jsonObject);
+}
+
+void automate::send_event(){
+    QVariantMap jsonObject;
+    jsonObject.insert("signal",kSignalEvent);
+    jsonObject.insert("song_name",song_name);
+    jsonObject.insert("duration",song_duration);
+    jsonObject.insert("volume",volume);
+    jsonObject.insert("mute",muted);
+    jsonObject.insert("play",playing);
+    emit signalMachine(kSignalEvent, jsonObject);
 }
 
 void automate::setPause(){

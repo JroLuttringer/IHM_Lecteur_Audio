@@ -7,7 +7,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     QString program = "mpv";
     QStringList arguments;
-    arguments << "/home/cyrille/Music/Bangles - Eternal Flame.mp3" << "--input-ipc-server=/tmp/mpvsocket";
+
+    arguments << "--idle" << "--quiet"
+              << "--input-ipc-server=/tmp/mpvsocket" << "--log-file=/home/cyrille/testlog"
+              << "--ytdl-format=bestvideo+bestaudio/best";
     myProcess = new QProcess(this);
     myProcess->start(program, arguments);
     ui->setupUi(this);
@@ -35,12 +38,17 @@ void MainWindow::send_pressed()
 void MainWindow::print_name(QTreeWidgetItem *item, int col)
 {
     QString test;
-    if(item->childCount() == 0)
+    qDebug() << "pressed the url";
+    //and is not top level
+
+    if(item->childCount() == 0 && item->parent() )
     {
-        test = item->parent()->text(0)+"/"+ item->text(0);
+        test = item->parent()->text(0) +"/"+item->text(0);
+//        qDebug() << test;
         emit change_song(test) ;
     }
-    else emit change_song(item->text(0));
+    else
+        emit change_song(item->text(0));
 }
 
 void MainWindow::reset_tree()
@@ -151,7 +159,7 @@ void MainWindow::load_children_from_file(QTextStream* in, QTreeWidgetItem* paren
 
 void MainWindow::load_tree_from_file()
 {
-    QFile file("/home/cyrille/test/save.txt");
+    QFile file("./save.txt");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&file);
     QTreeWidgetItem *item = new QTreeWidgetItem();
@@ -180,7 +188,7 @@ void MainWindow::save_tree_to_file()
     QStringList result = visitTree(ui->treeWidget);
     qDebug() << result;
 
-    QFile file("/home/cyrille/test/save.txt");
+    QFile file("./save.txt");
     qDebug("1" );
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
