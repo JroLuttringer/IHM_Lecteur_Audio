@@ -221,16 +221,13 @@ QStringList MainWindow::visitTree(QTreeWidget *tree)
     return list;
 }
 
-void MainWindow::closeEvent()
+void MainWindow::closeEvent(QCloseEvent *event)
 {
-    //Save preferences
-    //Song_name
-    //muted
-    //playing
-    //volume
-    //time-pos
-    //duration
-    //
+    event->ignore();
+    qDebug() << "In ui closeveent";
+    QVariantMap p;
+    emit signalSave(kSignalSave, p);
+//    QThread::msleep(1000);
     myProcess->close();
 
     if(myProcess)
@@ -238,8 +235,10 @@ void MainWindow::closeEvent()
     delete myProcess;
     myProcess = NULL;
     }
-
-
+    if (QMessageBox::Yes == QMessageBox::question(this, "Close Confirmation", "Exit?", QMessageBox::Yes | QMessageBox::No))
+    {
+        event->accept();
+    }
     delete ui;
 }
 

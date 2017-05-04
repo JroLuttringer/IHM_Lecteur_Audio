@@ -7,6 +7,8 @@
 #include <QTreeWidgetItem>
 #include <QDir>
 #include <QDirIterator>
+#include <QCloseEvent>
+#include <QMessageBox>
 #include "server.h"
 #include "automate.h"
 
@@ -39,9 +41,10 @@ signals:
     void signal_on();
     void change_song(QString);
     void signalUI(signalType, QVariantMap);
+    void signalSave(signalType, QVariantMap);
 
 public slots:
-    void closeEvent();
+    void closeEvent(QCloseEvent*);
     void send_pressed();
 
 

@@ -281,6 +281,19 @@ void server::message(signalType sig, QVariantMap params) {
       bytes = QJsonDocument(jsonObject).toJson(QJsonDocument::Compact)+"\n";
       send_bytes_to_clients(bytes);
       break;
+  case kSignalSave:
+//       save_preferences();
+      break;
+  case kSignalSetup:
+      qDebug() << "In setup with song: " << params["song_name"].toString();
+//      params["signal"] = kSignalSetup;
+      load_file_mpv( params["song_name"].toString() ); // = song_name;
+      mute_mpv( params["muted"].toBool() ); //= muted;
+      if (! params["playing"].toBool() )
+          pause_mpv();
+      set_time_mpv( params["time-pos"].toInt() );
+//      params["duration"] = song_duration;
+      break;
   default:
       break;
   }
@@ -323,6 +336,28 @@ void server::send_tree_from_file()
     file.close();
 }
 
+//void server::save_preferences()
+//{
+//    QFile file("./preferences.txt");
+//    qDebug("Opened prefs to save prefs" );
+//    file.open(QIODevice::WriteOnly | QIODevice::Text);
+//    QTextStream out(&file);
+//    //Save preferences
+//    //Song_name
+//    out << song_name << "\n";
+//    //muted
+//    out << muted<< "\n";
+//    //playing
+//    out << playing<< "\n";
+//    //volume
+//    out << volume<< "\n";
+//    //time-pos
+//    out << song_time<< "\n";
+//    //duration
+//    out << song_duration<< "\n";
+//    file.close();
+//    qDebug() << "dont have time";
+//}
 
 //fonction vers mpv
 
